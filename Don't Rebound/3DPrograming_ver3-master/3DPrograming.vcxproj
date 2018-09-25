@@ -199,33 +199,43 @@
   <ItemGroup>
     <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\fool.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\redmen.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\shot.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\shoting.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\fff.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\foor.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\mannji.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\Monster1.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\Shadow.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
     <MeshContentTask Include="FBX\sky2.FBX">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources\Models\%(Filename).cmo</ContentOutput>
     </MeshContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
