@@ -8,9 +8,6 @@
       <UniqueIdentifier>33d27b96-0970-45dd-ba5c-04a726dfdc18</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Models">
-      <UniqueIdentifier>{0c9eb3d5-3342-4029-bb64-1d19d6e69e67}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -44,9 +41,9 @@
     <ClCompile Include="CollisionSphere.cpp" />
     <ClCompile Include="DebugSphere.cpp" />
     <ClCompile Include="tsitPlayer.cpp" />
-    <ClCompile Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
-    <ClCompile Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\Math.cpp" />
-    <ClCompile Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\Barrett.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -60,37 +57,5 @@
     <Manifest Include="settings.manifest">
       <Filter>Assets</Filter>
     </Manifest>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="FBX\foor.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="FBX\Shadow.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="FBX\sky2.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="FBX\Monster1.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="FBX\mannji.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="FBX\fff.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\fool.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\shot.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\shoting.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="..\..\..\..\..\Don%27t Rebound\0702\0528\Don%27t Rebound\3DPrograming_ver3-master\FBX\redmen.FBX">
-      <Filter>Models</Filter>
-    </MeshContentTask>
   </ItemGroup>
 </Project>
