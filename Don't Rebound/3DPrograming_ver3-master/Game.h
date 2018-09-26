@@ -47,10 +47,10 @@ public:
 
 	//取得関数
 	//デバイスを取得する
-	ID3D11Device* GetDevice() { return m_deviceResources->GetD3DDevice(); }
+	ID3D11Device* GetDevice() { return DX::DeviceResources::GetInstance()->GetD3DDevice(); }
 
 	//コンテキストを取得する
-	ID3D11DeviceContext* GetContext() { return m_deviceResources->GetD3DDeviceContext(); }
+	ID3D11DeviceContext* GetContext() { return DX::DeviceResources::GetInstance()->GetD3DDeviceContext(); }
 
 	//コモンステートを取得する
 	DirectX::CommonStates* GetStates() { return m_states.get(); }
@@ -76,7 +76,7 @@ private:
 	void DrawSprite3D(DirectX::SimpleMath::Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float HP);
 
     // Device resources.
-    std::unique_ptr<DX::DeviceResources>    m_deviceResources;
+    //std::unique_ptr<DX::DeviceResources>    m_deviceResources;
 
     // Rendering loop timer.
     DX::StepTimer                           m_timer;

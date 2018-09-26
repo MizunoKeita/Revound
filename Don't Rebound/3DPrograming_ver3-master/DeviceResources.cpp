@@ -34,6 +34,23 @@ namespace
 #endif
 };
 
+// 唯一のインスタンスをNULLで初期化
+DX::DeviceResources *DX::DeviceResources::DrInstance = NULL;
+
+void DX::DeviceResources::Create()
+{
+	if (!DrInstance)
+	{
+		DrInstance = new DX::DeviceResources;
+	}
+}
+
+void DX::DeviceResources::Destroy()
+{
+	delete DrInstance;
+	DrInstance = NULL;
+}
+
 // Constructor for DeviceResources.
 DX::DeviceResources::DeviceResources(DXGI_FORMAT backBufferFormat, DXGI_FORMAT depthBufferFormat, UINT backBufferCount, D3D_FEATURE_LEVEL minFeatureLevel) :
     m_screenViewport{},

@@ -20,8 +20,11 @@ using Microsoft::WRL::ComPtr;
 
 Game::Game()
 {
-    m_deviceResources = std::make_unique<DX::DeviceResources>();
-    m_deviceResources->RegisterDeviceNotify(this);
+	//DeviceResourcesの作成
+	DX::DeviceResources::Create();
+
+    /*m_deviceResources = std::make_unique<DX::DeviceResources>();
+    m_deviceResources->RegisterDeviceNotify(this);*/
 }
 
 // Initialize the Direct3D resources required to run.
@@ -37,10 +40,10 @@ void Game::Initialize(HWND window, int width, int height)
 	// デバッグカメラの作成
 	m_debugCamera = std::make_unique<DebugCamera>(width, height);
 
-    m_deviceResources->SetWindow(window, width, height);
-    m_deviceResources->CreateDeviceResources();
+	DX::DeviceResources::GetInstance()->SetWindow(window, width, height);
+	DX::DeviceResources::GetInstance()->CreateDeviceResources();
     CreateDeviceDependentResources();
-    m_deviceResources->CreateWindowSizeDependentResources();
+    DX::DeviceResources::GetInstance()->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
@@ -216,8 +219,8 @@ void Game::Render()
 
 	Clear();
 
-	m_deviceResources->PIXBeginEvent(L"Render");
-	auto context = m_deviceResources->GetD3DDeviceContext();
+	DX::DeviceResources::GetInstance()->PIXBeginEvent(L"Render");
+	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
 	// ビュー行列の作成
 	m_view = m_debugCamera->GetCameraMatrix();
@@ -366,31 +369,31 @@ void Game::Render()
 	m_sprites->End();
 
 	// ここまで
-    m_deviceResources->PIXEndEvent();
+	DX::DeviceResources::GetInstance()->PIXEndEvent();
 
     // Show the new frame.
-    m_deviceResources->Present();
+	DX::DeviceResources::GetInstance()->Present();
 }
 
 // Helper method to clear the back buffers.
 void Game::Clear()
 {
-    m_deviceResources->PIXBeginEvent(L"Clear");
+	DX::DeviceResources::GetInstance()->PIXBeginEvent(L"Clear");
 
     // Clear the views.
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    auto renderTarget = m_deviceResources->GetRenderTargetView();
-    auto depthStencil = m_deviceResources->GetDepthStencilView();
+    auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
+    auto renderTarget = DX::DeviceResources::GetInstance()->GetRenderTargetView();
+    auto depthStencil = DX::DeviceResources::GetInstance()->GetDepthStencilView();
 
     context->ClearRenderTargetView(renderTarget, Colors::SkyBlue);
     context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
     // Set the viewport.
-    auto viewport = m_deviceResources->GetScreenViewport();
+    auto viewport = DX::DeviceResources::GetInstance()->GetScreenViewport();
     context->RSSetViewports(1, &viewport);
 
-    m_deviceResources->PIXEndEvent();
+	DX::DeviceResources::GetInstance()->PIXEndEvent();
 }
 #pragma endregion
 
@@ -420,7 +423,7 @@ void Game::OnResuming()
 
 void Game::OnWindowSizeChanged(int width, int height)
 {
-    if (!m_deviceResources->WindowSizeChanged(width, height))
+    if (!DX::DeviceResources::GetInstance()->WindowSizeChanged(width, height))
         return;
 
     CreateWindowSizeDependentResources();
@@ -441,8 +444,8 @@ void Game::GetDefaultSize(int& width, int& height) const
 // These are the resources that depend on the device.
 void Game::CreateDeviceDependentResources()
 {
-    ID3D11Device* device = m_deviceResources->GetD3DDevice();
-	ID3D11DeviceContext* context =  m_deviceResources->GetD3DDeviceContext();
+    ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
+	ID3D11DeviceContext* context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
     // TODO: Initialize device dependent objects here (independent of window size).
     device;
@@ -583,7 +586,7 @@ void Game::CreateWindowSizeDependentResources()
     // TODO: Initialize windows-size dependent objects here.
 
 	// ウインドウサイズからアスペクト比を算出する
-	RECT size = m_deviceResources->GetOutputSize();
+	RECT size = DX::DeviceResources::GetInstance()->GetOutputSize();
 	float aspectRatio = float(size.right) / float(size.bottom);
 
 	// 画角を設定
@@ -610,7 +613,7 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 	};
 
 	//コンテキスト
-	auto context = m_deviceResources->GetD3DDeviceContext();
+	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
 	// 不透明に設定
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
@@ -657,6 +660,8 @@ void Game::OnDeviceLost()
 	// スプライトフォントの解放
 	m_font.reset();
 
+	//DeviceResourcesの破棄
+	DX::DeviceResources::Destroy();
 }
 
 void Game::OnDeviceRestored()

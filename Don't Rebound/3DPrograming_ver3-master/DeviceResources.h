@@ -17,6 +17,18 @@ namespace DX
     class DeviceResources
     {
     public:
+		//シングルトン
+		static DeviceResources *GetInstance()
+		{
+			return DrInstance;
+		}
+
+		//作成
+		static void Create();
+
+		//削除
+		static void Destroy();
+
         DeviceResources(DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM,
                         DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT,
                         UINT backBufferCount = 2,
@@ -107,5 +119,8 @@ namespace DX
 
         // The IDeviceNotify can be held directly as it owns the DeviceResources.
         IDeviceNotify*                                  m_deviceNotify;
+
+	protected:
+		static DeviceResources *DrInstance;
     };
 }
