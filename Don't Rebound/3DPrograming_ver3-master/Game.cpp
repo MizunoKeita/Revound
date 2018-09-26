@@ -29,19 +29,15 @@ Game::Game()
 	//Mouseの作成
 	Mouse::Create();
 
-    /*m_deviceResources = std::make_unique<DX::DeviceResources>();
-    m_deviceResources->RegisterDeviceNotify(this);*/
+	//SpriteResourcesの作成
+	SpriteResources::Create();
 }
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
-	// キーボードの作成
-	//m_keyboard = std::make_unique<Keyboard>();
-
-	// マウスの作成
-	//m_mouse = std::make_unique<Mouse>();
-	//Mouse::Get().SetWindow(window);
+	// マウスの稼働できるウィンドウの設定
+	Mouse::Get().SetWindow(window);
 
 	// デバッグカメラの作成
 	m_debugCamera = std::make_unique<DebugCamera>(width, height);
@@ -313,18 +309,18 @@ void Game::Render()
 	//スプライトの描画はここから
 	//m_sprites->Begin();
 	//Begin 関数にアルファブレンドのステートを設定します
-	m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
+	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
 	//UIの描画
 	if (m_hitFlag == true)
 	{
 		if (m_player->GetMoveCount() == 1)
 		{
-			m_font->DrawString(m_sprites.get(), L"Attack!!!", Vector2(0.0f, 0.0f));
+			SpriteResources::GetInstance()->m_font->DrawString(SpriteResources::GetInstance()->m_sprites.get(), L"Attack!!!", Vector2(0.0f, 0.0f));
 		}
 		else
 		{
-			m_font->DrawString(m_sprites.get(), L"Hit!", Vector2(0.0f, 0.0f));
+			SpriteResources::GetInstance()->m_font->DrawString(SpriteResources::GetInstance()->m_sprites.get(), L"Hit!", Vector2(0.0f, 0.0f));
 		}
 	}
 
@@ -341,40 +337,40 @@ void Game::Render()
 	if (m_titleFlag == true)
 	{
 		//RECT a{ 100,100,300,300 };
-		m_sprites->Draw(m_titleTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_titleTexture.Get(), Vector2(0, 0));
 	}
 	else
 	{
 		//ステージ選択画面//
-		m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
 		//残り時間
 		int hundredTime = m_gameTime / 100;
 		int tenTime = (m_gameTime - hundredTime * 100)  / 10;
 		int oneTime = (m_gameTime - (hundredTime * 100 + tenTime * 10));
 
-		m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
-		m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
-		m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
 	}
 
 	//リザルト//
 	if (m_resultFlag == true)
 	{
-		m_sprites->Draw(m_resultTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_resultTexture.Get(), Vector2(0, 0));
 	}
 	if (m_gameTime == 0)
 	{
-		m_sprites->Draw(m_gameOverTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_gameOverTexture.Get(), Vector2(0, 0));
 	}
 
 	//Playerの攻撃表示
 	if (m_player->GetMoveCount() == 1 && m_resultFlag == false)
 	{
-		m_sprites->Draw(m_attackTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_attackTexture.Get(), Vector2(0, 0));
 	}
 
 	//スプライトの描画はここまで
-	m_sprites->End();
+	SpriteResources::GetInstance()->m_sprites->End();
 
 	// ここまで
 	DX::DeviceResources::GetInstance()->PIXEndEvent();
@@ -462,10 +458,10 @@ void Game::CreateDeviceDependentResources()
 	m_states = std::make_unique<CommonStates>(device);
 
 	// スプライトバッチの作成
-	m_sprites = std::make_unique<SpriteBatch>(context);
+	SpriteResources::GetInstance()->m_sprites = std::make_unique<SpriteBatch>(context);
 
 	// スプライトフォントの作成
-	m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
+	SpriteResources::GetInstance()->m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 
 	// エフェクトファクトリー
 	EffectFactory fx(device);
@@ -660,10 +656,10 @@ void Game::OnDeviceLost()
 	m_states.reset();
 
 	// スプライトバッチの解放
-	m_sprites.reset();
+	SpriteResources::GetInstance()->m_sprites.reset();
 
 	// スプライトフォントの解放
-	m_font.reset();
+	SpriteResources::GetInstance()->m_font.reset();
 
 	//DeviceResourcesの破棄
 	DX::DeviceResources::Destroy();

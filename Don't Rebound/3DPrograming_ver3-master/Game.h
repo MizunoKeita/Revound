@@ -15,6 +15,7 @@
 #include "CollisionSphere.h"
 #include "tsitPlayer.h"
 #include "Barrett.h"
+#include "SpriteResources.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -75,26 +76,11 @@ private:
 
 	void DrawSprite3D(DirectX::SimpleMath::Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float HP);
 
-    // Device resources.
-    //std::unique_ptr<DX::DeviceResources>    m_deviceResources;
-
     // Rendering loop timer.
     DX::StepTimer                           m_timer;
 
-	// キーボード
-	//std::unique_ptr<DirectX::Keyboard> m_keyboard;
-
-	// マウス
-	//std::unique_ptr<DirectX::Mouse> m_mouse;
-
 	// コモンステート
 	std::unique_ptr<DirectX::CommonStates> m_states;
-
-	// スプライトバッチ
-	std::unique_ptr<DirectX::SpriteBatch> m_sprites;
-
-	// スプライトフォント
-	std::unique_ptr<DirectX::SpriteFont> m_font;
 
 	// ワールド行列
 	DirectX::SimpleMath::Matrix m_world;

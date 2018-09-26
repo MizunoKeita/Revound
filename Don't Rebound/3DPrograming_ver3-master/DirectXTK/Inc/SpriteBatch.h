@@ -45,6 +45,7 @@ namespace DirectX
     class SpriteBatch
     {
     public:
+
         explicit SpriteBatch(_In_ ID3D11DeviceContext* deviceContext);
         SpriteBatch(SpriteBatch&& moveFrom);
         SpriteBatch& operator= (SpriteBatch&& moveFrom);
@@ -88,5 +89,6 @@ namespace DirectX
 
         static const XMMATRIX MatrixIdentity;
         static const XMFLOAT2 Float2Zero;
+
     };
 }
