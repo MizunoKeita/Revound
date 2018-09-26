@@ -21,7 +21,7 @@ using Microsoft::WRL::ComPtr;
 Game::Game()
 {
 	//DeviceResourcesの作成
-	DX::DeviceResources::Create();
+	//DX::DeviceResources::Create();
 
     /*m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);*/
@@ -31,7 +31,7 @@ Game::Game()
 void Game::Initialize(HWND window, int width, int height)
 {
 	// キーボードの作成
-	m_keyboard = std::make_unique<Keyboard>();
+	Keyboard::GetInstance();
 
 	// マウスの作成
 	m_mouse = std::make_unique<Mouse>();
