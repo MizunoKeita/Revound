@@ -20,6 +20,10 @@ namespace DX
 		//シングルトン
 		static DeviceResources *GetInstance()
 		{
+			if (DrInstance == NULL)
+			{
+				Create();
+			}
 			return DrInstance;
 		}
 

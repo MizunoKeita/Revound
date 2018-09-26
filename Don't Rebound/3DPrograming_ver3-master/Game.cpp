@@ -502,9 +502,6 @@ void Game::CreateDeviceDependentResources()
 	//ゲームオーバーテクスチャ
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\Over.png", nullptr, m_gameOverTexture.GetAddressOf());
 
-	//アタックテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\ATTACK.png", nullptr, m_attackTexture.GetAddressOf());
-
 	// エフェクトの作成
 	m_batchEffect = std::make_unique<AlphaTestEffect>(device);
 	m_batchEffect->SetAlphaFunction(D3D11_COMPARISON_EQUAL);
