@@ -85,7 +85,7 @@ private:
 	//std::unique_ptr<DirectX::Keyboard> m_keyboard;
 
 	// マウス
-	std::unique_ptr<DirectX::Mouse> m_mouse;
+	//std::unique_ptr<DirectX::Mouse> m_mouse;
 
 	// コモンステート
 	std::unique_ptr<DirectX::CommonStates> m_states;

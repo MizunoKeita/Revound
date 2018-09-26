@@ -22,6 +22,25 @@ namespace DirectX
     class Mouse
     {
     public:
+		//ƒVƒ“ƒOƒ‹ƒgƒ“
+		static Mouse *GetInstance()
+		{
+			s_Mouse = s_Mouse ? s_Mouse : Create();
+			return s_Mouse;
+		}
+
+		//ì¬
+		static Mouse* Create()
+		{
+			return new Mouse;
+		};
+
+		//íœ
+		static void Destroy()
+		{
+			delete s_Mouse;
+			s_Mouse = NULL;
+		};
         Mouse();
         Mouse(Mouse&& moveFrom);
         Mouse& operator= (Mouse&& moveFrom);
@@ -116,5 +135,7 @@ namespace DirectX
         class Impl;
 
         std::unique_ptr<Impl> pImpl;
+	protected:
+		static Mouse *s_Mouse;
     };
 }

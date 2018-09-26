@@ -26,6 +26,9 @@ Game::Game()
 	//Keyboardの作成
 	Keyboard::Create();
 
+	//Mouseの作成
+	Mouse::Create();
+
     /*m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);*/
 }
@@ -37,8 +40,8 @@ void Game::Initialize(HWND window, int width, int height)
 	//m_keyboard = std::make_unique<Keyboard>();
 
 	// マウスの作成
-	m_mouse = std::make_unique<Mouse>();
-	m_mouse->SetWindow(window);
+	//m_mouse = std::make_unique<Mouse>();
+	//Mouse::Get().SetWindow(window);
 
 	// デバッグカメラの作成
 	m_debugCamera = std::make_unique<DebugCamera>(width, height);
@@ -664,6 +667,10 @@ void Game::OnDeviceLost()
 
 	//DeviceResourcesの破棄
 	DX::DeviceResources::Destroy();
+
+	//Keyboard::Destroy();
+
+	//Mouse::Destroy();
 }
 
 void Game::OnDeviceRestored()
