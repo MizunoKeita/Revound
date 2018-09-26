@@ -40,10 +40,12 @@ void Game::Initialize(HWND window, int width, int height)
 	// デバッグカメラの作成
 	m_debugCamera = std::make_unique<DebugCamera>(width, height);
 
-	DX::DeviceResources::GetInstance()->SetWindow(window, width, height);
-	DX::DeviceResources::GetInstance()->CreateDeviceResources();
+	DX::DeviceResources* deviceResources = DX::DeviceResources::GetInstance();
+
+	deviceResources->SetWindow(window, width, height);
+	deviceResources->CreateDeviceResources();
     CreateDeviceDependentResources();
-    DX::DeviceResources::GetInstance()->CreateWindowSizeDependentResources();
+	deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.

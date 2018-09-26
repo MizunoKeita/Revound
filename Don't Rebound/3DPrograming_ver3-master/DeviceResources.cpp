@@ -37,12 +37,9 @@ namespace
 // 唯一のインスタンスをNULLで初期化
 DX::DeviceResources *DX::DeviceResources::DrInstance = NULL;
 
-void DX::DeviceResources::Create()
+DX::DeviceResources* DX::DeviceResources::Create()
 {
-	if (!DrInstance)
-	{
-		DrInstance = new DX::DeviceResources;
-	}
+	return new DX::DeviceResources;
 }
 
 void DX::DeviceResources::Destroy()

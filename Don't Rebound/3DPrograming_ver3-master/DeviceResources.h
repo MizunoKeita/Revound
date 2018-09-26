@@ -20,15 +20,12 @@ namespace DX
 		//シングルトン
 		static DeviceResources *GetInstance()
 		{
-			if (DrInstance == NULL)
-			{
-				Create();
-			}
+			DrInstance = DrInstance ? DrInstance : Create();
 			return DrInstance;
 		}
 
 		//作成
-		static void Create();
+		static DX::DeviceResources* Create();
 
 		//削除
 		static void Destroy();
