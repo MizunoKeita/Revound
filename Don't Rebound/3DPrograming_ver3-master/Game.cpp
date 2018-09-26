@@ -228,7 +228,6 @@ void Game::Render()
 
 	// ビュー行列の作成
 	m_view = m_debugCamera->GetCameraMatrix();
-	Matrix world;
 	
 	//ライト
 	auto SetLight = [&](IEffect* effect)
@@ -276,7 +275,7 @@ void Game::Render()
 		}
 	});
 
-	world = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f));
+	Matrix world = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f));
 
 	//スカイボックスの描画
 	m_sky->Draw(context, *m_states.get(), world, m_view, m_projection);
