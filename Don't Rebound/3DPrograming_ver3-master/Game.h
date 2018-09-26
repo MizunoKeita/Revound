@@ -56,12 +56,11 @@ public:
 	//コモンステートを取得する
 	DirectX::CommonStates* GetStates() { return m_states.get(); }
 
-	////ビュー行列を取得する
-	//const DirectX::SimpleMath::Matrix& GetView() { return m_view; }
+	//ビュー行列を取得する
+	const DirectX::SimpleMath::Matrix& GetView() { return m_view; }
 
-	////射影行列を取得する
-	//const DirectX::SimpleMath::Matrix& GetProjection() { return m_projection; }
-
+	//射影行列を取得する
+	const DirectX::SimpleMath::Matrix& GetProjection() { return m_projection; }
 private:
 
 	//更新
@@ -82,6 +81,12 @@ private:
 
 	// コモンステート
 	std::unique_ptr<DirectX::CommonStates> m_states;
+
+	// ワールド行列
+	DirectX::SimpleMath::Matrix m_world;
+
+	// ビュー行列
+	DirectX::SimpleMath::Matrix m_view;
 
 	// 射影行列
 	DirectX::SimpleMath::Matrix m_projection;
