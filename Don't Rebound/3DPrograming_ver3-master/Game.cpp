@@ -23,6 +23,9 @@ Game::Game()
 	//DeviceResourcesの作成
 	DX::DeviceResources::Create();
 
+	//Keyboardの作成
+	Keyboard::Create();
+
     /*m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);*/
 }
@@ -31,7 +34,7 @@ Game::Game()
 void Game::Initialize(HWND window, int width, int height)
 {
 	// キーボードの作成
-	m_keyboard = std::make_unique<Keyboard>();
+	//m_keyboard = std::make_unique<Keyboard>();
 
 	// マウスの作成
 	m_mouse = std::make_unique<Mouse>();

@@ -23,6 +23,27 @@ namespace DirectX
     class Keyboard
     {
     public:
+
+		//ƒVƒ“ƒOƒ‹ƒgƒ“
+		static Keyboard *GetInstance()
+		{
+			s_Keyboard = s_Keyboard ? s_Keyboard : Create();
+			return s_Keyboard;
+		}
+
+		//ì¬
+		static Keyboard* Create()
+		{
+			return new Keyboard;
+		};
+
+		//íœ
+		static void Destroy()
+		{
+			delete s_Keyboard;
+			s_Keyboard = NULL;
+		};
+
         Keyboard();
         Keyboard(Keyboard&& moveFrom);
         Keyboard& operator= (Keyboard&& moveFrom);
@@ -475,5 +496,8 @@ namespace DirectX
         class Impl;
 
         std::unique_ptr<Impl> pImpl;
+
+	protected:
+		static Keyboard *s_Keyboard;
     };
 }
