@@ -227,7 +227,7 @@ void Game::Render()
 	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
 	// ビュー行列の作成
-	m_view = m_debugCamera->GetCameraMatrix();
+	Matrix m_view = m_debugCamera->GetCameraMatrix();
 	Matrix world;
 	
 	//ライト
@@ -625,6 +625,8 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 
 	// カリングは左周り
 	context->RSSetState(m_states->CullCounterClockwise());
+
+	Matrix m_view = m_debugCamera->GetCameraMatrix();
 
 	//// 不透明のみ描画する設定
 	m_batchEffect->SetWorld(world);
