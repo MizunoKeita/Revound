@@ -148,41 +148,41 @@ void Game::Update(DX::StepTimer const& timer)
 	m_barrett->Update(m_player->GetRotation(), m_player->getPos(), m_player->Getdirection());
 
 	//敵の更新
-	m_tsit->Update(elapsedTime);
+	m_Bos->Update(elapsedTime);
 
 	//雑魚敵の更新
 	for (int i = 0; i < 10; i++)
 	{
-		m_tsits[i]->Update(elapsedTime);
+		m_Enemy[i]->Update(elapsedTime);
 	}
 
 	m_hitFlag = false;
 
 	//Playerとボスの当たり判定
-	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_tsit->GetCollision()) == true)
+	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Bos->GetCollision()) == true)
 	{
 		m_hitFlag = true;
 	}
 
 	//弾とボスの当たり判定
-	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_tsit->GetCollision()) == true)
+	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Bos->GetCollision()) == true)
 	{
 		//ボスの表示を消す
-		m_tsit->state(0);
+		m_Bos->state(0);
 	}
 
 	//Playerと雑魚敵の当たり判定
 	for (int i = 0; i < 10; i++)
 	{
-		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_tsits[i]->GetCollision()) == true)
+		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Enemy[i]->GetCollision()) == true)
 		{
 			//PlayerのHPを減らす
 			m_player->SubHp(0.2f);
 		} 
-		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_tsits[i]->GetCollision()) == true)
+		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Enemy[i]->GetCollision()) == true)
 		{
 			//雑魚の表示を消す
-			m_tsits[i]->state(0);
+			m_Enemy[i]->state(0);
 		}
 	}
 	
@@ -193,15 +193,15 @@ void Game::Update(DX::StepTimer const& timer)
 		m_resultFlag = false;
 		m_titleFlag = true;
 		m_player->SetStatus();
-		m_tsit->state(1);
+		m_Bos->state(1);
 		m_gameTime = 60;
 		for (int i = 0; i < 10; i++)
 		{
-			m_tsits[i]->state(1);
+			m_Enemy[i]->state(1);
 		}	
 	}
 
-	if (m_player->GetHp() <= 0 || m_tsit->GetState() == 0)
+	if (m_player->GetHp() <= 0 || m_Bos->GetState() == 0)
 	{
 		//リザルトシーンに移行
 		m_resultFlag = true;
@@ -293,23 +293,23 @@ void Game::Render()
 	m_barrett->Render();
 
 	//ボスの描画
-	if (m_tsit->GetState() == 1)
+	if (m_Bos->GetState() == 1)
 	{
-		m_tsit->Render();
+		m_Bos->Render();
 		//m_tsit->DrawCollision();
 	}
 
 	//雑魚敵の描画
 	for (int i = 0; i < 10; i++)
 	{
-		if (m_tsits[i]->GetState() == 1)
+		if (m_Enemy[i]->GetState() == 1)
 		{
-			m_tsits[i]->Render();
+			m_Enemy[i]->Render();
 		}
 	}
 	
-	//スプライトの描画はここから//
-
+	//スプライトの描画はここから
+	//m_sprites->Begin();
 	//Begin 関数にアルファブレンドのステートを設定します
 	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
@@ -528,12 +528,6 @@ void Game::CreateDeviceDependentResources()
 	
 	//時間
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_Timetexture.GetAddressOf());
-	
-	//Monsterモデル
-	m_tsitModel = Model::CreateFromCMO(device, L"Resources\\Models\\Monster1.cmo", fx);
-	
-	//弾モデル
-	m_barrettModel = Model::CreateFromCMO(device, L"Resources\\Models\\shoting.cmo", fx);
 
 	//スフィアの設定
 	Collision::Sphere sphere;
@@ -552,27 +546,25 @@ void Game::CreateDeviceDependentResources()
 	//弾
 	m_barrett = std::make_unique<Barrett>();
 	m_barrett->SetGame(this);
-	m_barrett->SetModel(m_barrettModel.get());
 	m_barrett->SetCollision(sphere);
 
 	//ボス敵
-	m_tsit = std::make_unique<CollisionSphere>();
-	m_tsit->SetGame(this);
-	m_tsit->SetModel(m_tsitModel.get());
+	m_Bos = std::make_unique<Monster>();
+	m_Bos->SetGame(this);
 
 	//移動
-	m_tsit->SetPosirion(Vector3(6.0f, 0.0f, 0.0f));
-	m_tsit->SetCollision(sphere);
+	m_Bos->SetPosirion(Vector3(6.0f, 0.0f, 0.0f));
+	m_Bos->SetCollision(sphere);
 
 	//雑魚敵
 	for (int i = 0; i < 10; i++)
 	{
-		m_tsits[i] = std::make_unique<CollisionSphere>();
-		m_tsits[i]->SetGame(this);
-		m_tsits[i]->SetModel(m_tsitModel.get());
+		m_Enemy[i] = std::make_unique<Monster>();
+		m_Enemy[i]->SetGame(this);
+
 		//移動
-		m_tsits[i]->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
-		m_tsits[i]->SetCollision(sphere);
+		m_Enemy[i]->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
+		m_Enemy[i]->SetCollision(sphere);
 	}
 
 	// TODO: Initialize device dependent objects here (independent of window size).
@@ -583,8 +575,6 @@ void Game::CreateDeviceDependentResources()
 void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
-
-
 }
 
 void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float HP)

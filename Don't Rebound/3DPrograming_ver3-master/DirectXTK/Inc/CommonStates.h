@@ -23,27 +23,27 @@ namespace DirectX
     class CommonStates
     {
     public:
-		//シングルトン
-		static CommonStates *GetInstance()
-		{
-			s_CommonStates = s_CommonStates ? s_CommonStates : Create();
-			return s_CommonStates;
-		}
+		////シングルトン
+		//static CommonStates *GetInstance()
+		//{
+		//	s_CommonStates = s_CommonStates ? s_CommonStates : Create();
+		//	return s_CommonStates;
+		//}
 
-		//作成
-		static CommonStates* Create()
-		{
-			return new CommonStates;
-		}
+		////作成
+		//static CommonStates* Create()
+		//{
+		//	return new CommonStates;
+		//}
 
-		//削除
-		static void Destroy()
-		{
-			delete s_CommonStates;
-			s_CommonStates = NULL;
-		}
+		////削除
+		//static void Destroy()
+		//{
+		//	delete s_CommonStates;
+		//	s_CommonStates = NULL;
+		//}
 
-		CommonStates();
+		//CommonStates();
         explicit CommonStates(_In_ ID3D11Device* device);
         CommonStates(CommonStates&& moveFrom);
         CommonStates& operator= (CommonStates&& moveFrom);

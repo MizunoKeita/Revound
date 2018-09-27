@@ -16,6 +16,7 @@
 #include "tsitPlayer.h"
 #include "Barrett.h"
 #include "SpriteResources.h"
+#include "Monster.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -125,12 +126,6 @@ private:
 	//攻撃表示テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_attackTexture;
 
-	//敵のモデルハンドル
-	std::unique_ptr<Model> m_tsitModel;
-
-	//敵のモデルハンドル
-	std::unique_ptr<Model> m_barrettModel;
-
 	//プレイヤー
 	std::unique_ptr<tsitPlayer> m_player;
 
@@ -138,10 +133,10 @@ private:
 	std::unique_ptr<Barrett> m_barrett;
 
 	//敵
-	std::unique_ptr<CollisionSphere> m_tsit;
+	std::unique_ptr<Monster> m_Bos;
 
 	//敵群
-	std::unique_ptr<CollisionSphere> m_tsits[10];
+	std::unique_ptr<Monster> m_Enemy[10];
 
 	//衝突判定フラグ
 	bool m_hitFlag;

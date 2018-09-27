@@ -12,6 +12,15 @@ Barrett::Barrett() :m_direction(0.0f)
 	m_moveCount = 0;
 	m_start = Vector3(-5.0f, 0.0f, -5.0f);
 	m_position = m_start;
+
+	//デバイスの取得
+	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
+
+	// エフェクトファクトリー
+	EffectFactory fx(device);
+
+	//モデルを取得
+	m_model = Model::CreateFromCMO(device, L"Resources\\Models\\shoting.cmo", fx);
 }
 
 bool Barrett::Update(Quaternion rot, Vector3 pos, float dir)
