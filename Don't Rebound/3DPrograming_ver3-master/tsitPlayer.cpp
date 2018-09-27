@@ -13,6 +13,14 @@ tsitPlayer::tsitPlayer() :m_direction(0.0f), m_moveFlag(STOP)
 	m_Hp = 100.0f;
 	m_start = Vector3(-5.0f, 0.0f, -5.0f);
 	m_position = m_start;
+
+	//デバイスの取得
+	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
+
+	// エフェクトファクトリー
+	EffectFactory fx(device);
+
+	m_p_model = Model::CreateFromCMO(device, L"Resources\\Models\\redmen.cmo", fx);
 }
 
 bool tsitPlayer::Update(float elapsedTime)
@@ -67,7 +75,8 @@ bool tsitPlayer::Update(float elapsedTime)
 
 void tsitPlayer::Render()
 {
-	if (m_game&&m_model)
+	//if (m_game&&m_model)
+	if (m_game&&m_p_model)
 	{
 
 		// ビュー行列の作成
@@ -77,7 +86,7 @@ void tsitPlayer::Render()
 		DirectX::SimpleMath::Matrix projection = DebugCamera::GetProjection();
 
 		//モデルを描画
-		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, view, projection);
+		m_p_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, view, projection);
 	}
 }
 

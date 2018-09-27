@@ -35,14 +35,14 @@ namespace DirectX
 		static Keyboard* Create()
 		{
 			return new Keyboard;
-		};
+		}
 
 		//íœ
 		static void Destroy()
 		{
 			delete s_Keyboard;
 			s_Keyboard = NULL;
-		};
+		}
 
         Keyboard();
         Keyboard(Keyboard&& moveFrom);

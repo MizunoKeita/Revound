@@ -125,9 +125,6 @@ private:
 	//攻撃表示テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_attackTexture;
 
-	//プレイヤーのモデルハンドル
-	std::unique_ptr<Model> m_playerModel;
-
 	//敵のモデルハンドル
 	std::unique_ptr<Model> m_tsitModel;
 

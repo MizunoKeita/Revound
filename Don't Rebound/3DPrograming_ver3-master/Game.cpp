@@ -308,8 +308,8 @@ void Game::Render()
 		}
 	}
 	
-	//スプライトの描画はここから
-	//m_sprites->Begin();
+	//スプライトの描画はここから//
+
 	//Begin 関数にアルファブレンドのステートを設定します
 	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
@@ -529,9 +529,6 @@ void Game::CreateDeviceDependentResources()
 	//時間
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_Timetexture.GetAddressOf());
 	
-	//プレイヤーモデル
-	m_playerModel = Model::CreateFromCMO(device, L"Resources\\Models\\redmen.cmo", fx);
-
 	//Monsterモデル
 	m_tsitModel = Model::CreateFromCMO(device, L"Resources\\Models\\Monster1.cmo", fx);
 	
@@ -550,7 +547,6 @@ void Game::CreateDeviceDependentResources()
 	//プレイヤー
 	m_player = std::make_unique<tsitPlayer>();
 	m_player->SetGame(this);
-	m_player->SetModel(m_playerModel.get());
 	m_player->SetCollision(sphere);
 
 	//弾

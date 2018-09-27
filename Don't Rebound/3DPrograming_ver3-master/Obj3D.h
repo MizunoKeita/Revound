@@ -7,12 +7,16 @@ class Game;
 
 class Obj3D
 {
+public:
+	//モデルハンドル
+	std::unique_ptr<Model> m_p_model;
+
 protected:
 
 	//ゲームオブジェクトへのポインタ
 	Game* m_game;
 
-	//モデルハンドル
+	//モデル
 	Model* m_model;
 
 	//位置
@@ -23,6 +27,7 @@ protected:
 
 	//ワールド行列
 	Matrix m_world;
+
 public:
 	//コンストラクタ
 	Obj3D();
