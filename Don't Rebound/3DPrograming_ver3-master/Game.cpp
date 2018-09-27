@@ -54,7 +54,8 @@ void Game::Initialize(HWND window, int width, int height)
     // e.g. for 60 FPS fixed timestep update logic, call:
 
 	//タイトルフラグをオン
-	m_titleFlag = true;
+	m_TitleScene->SetFlag(true);
+
 	//リザルトフラグをオフ
 	m_resultFlag = false;
 
@@ -79,7 +80,7 @@ void Game::Update(DX::StepTimer const& timer)
 	static float moveX = 0.0f;
 	static float moveZ = 0.0f;
 
-	if (m_titleFlag == false)
+	if (m_TitleScene->GetFlag() == false)
 	{
 		m_GameTime->Update();
 
@@ -132,7 +133,7 @@ void Game::Update(DX::StepTimer const& timer)
 	//タイトルからプレイシーンに移動
 	if (GetKeyState(' ') & 0x8000)
 	{
-		m_titleFlag = false;
+		m_TitleScene->SetFlag(false);
 	}
 
 	//プレイヤーの更新
@@ -185,7 +186,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		//初期化する
 		m_resultFlag = false;
-		m_titleFlag = true;
+		m_TitleScene->SetFlag(true);
 		m_player->SetStatus();
 		m_Bos->state(1);
 		m_GameTime->ResetGameTime();
@@ -308,6 +309,8 @@ void Game::Render()
 	//Begin 関数にアルファブレンドのステートを設定します
 	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
+	m_TitleScene->Render();
+
 	//UIの描画
 	if (m_hitFlag == true)
 	{
@@ -331,18 +334,13 @@ void Game::Render()
 	//DrawSprite3D(world, m_timeUiTexture, 100.0f);
 
 	//タイトル//
-	if (m_titleFlag == true)
-	{
-		//RECT a{ 100,100,300,300 };
-		SpriteResources::GetInstance()->m_sprites->Draw(m_titleTexture.Get(), Vector2(0, 0));
-	}
-	else
+	if (m_TitleScene->GetFlag() != true)
 	{
 		//ステージ選択画面//
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
 		//残り時間
 		int hundredTime = m_GameTime->GetTimeLimit() / 100;
-		int tenTime = (m_GameTime->GetTimeLimit() - hundredTime * 100)  / 10;
+		int tenTime = (m_GameTime->GetTimeLimit() - hundredTime * 100) / 10;
 		int oneTime = (m_GameTime->GetTimeLimit() - (hundredTime * 100 + tenTime * 10));
 
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
@@ -479,9 +477,6 @@ void Game::CreateDeviceDependentResources()
 	// テクスチャのロード
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\UI0611.png", nullptr, m_texture.GetAddressOf());
 	
-	//タイトルテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Title.png", nullptr, m_titleTexture.GetAddressOf());
-	
 	//時間のテクスチャ
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\Zero.png" , nullptr, m_timeTexture[0].GetAddressOf());
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\One.png"  , nullptr, m_timeTexture[1].GetAddressOf());
@@ -562,7 +557,11 @@ void Game::CreateDeviceDependentResources()
 		m_Enemy[i]->SetCollision(sphere);
 	}
 
+	//ゲームタイムを作成
 	m_GameTime = std::make_unique<GameTimer>();
+
+	//タイトルシーンを作成
+	m_TitleScene = std::make_unique<TitleScene>();
 
 	// TODO: Initialize device dependent objects here (independent of window size).
 	device;

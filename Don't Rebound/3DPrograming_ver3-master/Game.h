@@ -18,6 +18,7 @@
 #include "SpriteResources.h"
 #include "Monster.h"
 #include "gameTimer.h"
+#include "TitleScene.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -110,7 +111,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_Timetexture;
 
 	//タイトルテクスチャハンドル
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_titleTexture;
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_titleTexture;
 
 	//リザルトテクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_resultTexture;
@@ -143,7 +144,7 @@ private:
 	bool m_hitFlag;
 
 	//タイトルフラグ
-	bool m_titleFlag;
+	//bool m_titleFlag;
 
 	//ステージ選択フラグ
 	bool m_StageFlag;
@@ -153,4 +154,7 @@ private:
 
 	//ゲーム時間クラス
 	std::unique_ptr<GameTimer> m_GameTime;
+
+	//タイトルシーン
+	std::unique_ptr<TitleScene> m_TitleScene;
 };
