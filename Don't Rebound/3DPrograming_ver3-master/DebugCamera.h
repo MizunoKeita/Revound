@@ -30,9 +30,6 @@ class DebugCamera
 	// スクロールフォイール値
 	int m_scrollWheelValue;
 
-	// 生成されたビュー行列
-	DirectX::SimpleMath::Matrix m_view;
-
 	// 視点
 	DirectX::SimpleMath::Vector3 m_eye;
 
@@ -42,8 +39,8 @@ class DebugCamera
 	// マウストラッカー
 	DirectX::Mouse::ButtonStateTracker m_tracker;
 
-	//ゲームビュー行列
-	static DirectX::SimpleMath::Matrix m_gameView;
+	// 生成されたビュー行列
+	static DirectX::SimpleMath::Matrix m_view;
 
 	// 射影行列
 	static DirectX::SimpleMath::Matrix m_projection;
