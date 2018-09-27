@@ -9,6 +9,9 @@ public:
 	//更新
 	bool Update();
 
+	//描画
+	void Render();
+
 	//フレーム数を取得　0-60を繰り返す
 	int GetCount();
 
@@ -31,4 +34,11 @@ private:
 
 	//制限時間
 	int m_TimeLimit;
+
+	//タイムUIのテクスチャハンドル
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeUiTexture;
+
+	//時間のテクスチャハンドル
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeTexture[10];
+
 };

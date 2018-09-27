@@ -146,9 +146,14 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Bos->Update(elapsedTime);
 
 	//雑魚敵の更新
-	for (int i = 0; i < 10; i++)
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	m_Enemy[i]->Update(elapsedTime);
+	//}
+
+	for each (auto enemy in m_Enemys)
 	{
-		m_Enemy[i]->Update(elapsedTime);
+		enemy->Update(elapsedTime);
 	}
 
 	m_hitFlag = false;
@@ -167,17 +172,31 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	//Playerと雑魚敵の当たり判定
-	for (int i = 0; i < 10; i++)
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Enemy[i]->GetCollision()) == true)
+	//	{
+	//		//PlayerのHPを減らす
+	//		m_player->SubHp(0.2f);
+	//	} 
+	//	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Enemy[i]->GetCollision()) == true)
+	//	{
+	//		//雑魚の表示を消す
+	//		m_Enemy[i]->state(0);
+	//	}
+	//}
+
+	for each (auto enemy in m_Enemys)
 	{
-		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Enemy[i]->GetCollision()) == true)
+		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), enemy->GetCollision()) == true)
 		{
 			//PlayerのHPを減らす
 			m_player->SubHp(0.2f);
-		} 
-		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Enemy[i]->GetCollision()) == true)
+		}
+		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), enemy->GetCollision()) == true)
 		{
 			//雑魚の表示を消す
-			m_Enemy[i]->state(0);
+			enemy->state(0);
 		}
 	}
 	
@@ -191,9 +210,9 @@ void Game::Update(DX::StepTimer const& timer)
 		m_Bos->state(1);
 		m_GameTime->ResetGameTime();
 
-		for (int i = 0; i < 10; i++)
+		for each (auto enemy in m_Enemys)
 		{
-			m_Enemy[i]->state(1);
+			enemy->state(1);
 		}	
 	}
 
@@ -296,11 +315,11 @@ void Game::Render()
 	}
 
 	//雑魚敵の描画
-	for (int i = 0; i < 10; i++)
+	for each (auto enemy in m_Enemys)
 	{
-		if (m_Enemy[i]->GetState() == 1)
+		if (enemy->GetState() == 1)
 		{
-			m_Enemy[i]->Render();
+			enemy->Render();
 		}
 	}
 	
@@ -334,16 +353,7 @@ void Game::Render()
 	//タイトル//
 	if (m_TitleScene->GetFlag() != true)
 	{
-		//ステージ選択画面//
-		SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
-		//残り時間
-		int hundredTime = m_GameTime->GetTimeLimit() / 100;
-		int tenTime = (m_GameTime->GetTimeLimit() - hundredTime * 100) / 10;
-		int oneTime = (m_GameTime->GetTimeLimit() - (hundredTime * 100 + tenTime * 10));
-
-		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
-		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
-		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
+		m_GameTime->Render();
 	}
 
 	//Playerの攻撃表示
@@ -471,21 +481,6 @@ void Game::CreateDeviceDependentResources()
 	// テクスチャのロード
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\UI0611.png", nullptr, m_texture.GetAddressOf());
 	
-	//時間のテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Zero.png" , nullptr, m_timeTexture[0].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\One.png"  , nullptr, m_timeTexture[1].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Two.png"  , nullptr, m_timeTexture[2].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Three.png", nullptr, m_timeTexture[3].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Four.png" , nullptr, m_timeTexture[4].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Five.png" , nullptr, m_timeTexture[5].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Six.png  ", nullptr, m_timeTexture[6].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Seven.png", nullptr, m_timeTexture[7].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Eight.png", nullptr, m_timeTexture[8].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Nine.png" , nullptr, m_timeTexture[9].GetAddressOf());
-
-	//タイムUIテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_timeUiTexture.GetAddressOf());
-
 	// エフェクトの作成
 	m_batchEffect = std::make_unique<AlphaTestEffect>(device);
 	m_batchEffect->SetAlphaFunction(D3D11_COMPARISON_EQUAL);
@@ -504,9 +499,6 @@ void Game::CreateDeviceDependentResources()
 	//プレイヤーHP
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\HPUI.png", nullptr, m_texture.GetAddressOf());
 	
-	//時間
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_Timetexture.GetAddressOf());
-
 	//スフィアの設定
 	Collision::Sphere sphere;
 
@@ -535,14 +527,15 @@ void Game::CreateDeviceDependentResources()
 	m_Bos->SetCollision(sphere);
 
 	//雑魚敵
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i<POP_ENEMY_NUM; i++)
 	{
-		m_Enemy[i] = std::make_unique<Monster>();
-		m_Enemy[i]->SetGame(this);
+		Monster* monster = new Monster();
+		m_Enemys.push_back(monster);
+		monster->SetGame(this);
 
 		//移動
-		m_Enemy[i]->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
-		m_Enemy[i]->SetCollision(sphere);
+		monster->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
+		monster->SetCollision(sphere);
 	}
 
 	//ゲームタイムを作成
@@ -615,6 +608,11 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
+
+	for each (auto enemy in m_Enemys)
+	{
+		delete enemy;
+	}
 
 	// コモンステートの解放
 	m_states.reset();

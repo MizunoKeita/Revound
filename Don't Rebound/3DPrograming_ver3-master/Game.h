@@ -20,6 +20,7 @@
 #include "gameTimer.h"
 #include "TitleScene.h"
 #include "ResultScene.h"
+#include <list>
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -108,15 +109,6 @@ private:
 	//テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 
-	//時間テクスチャハンドル
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_Timetexture;
-
-	//時間のテクスチャハンドル
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeTexture[10];
-
-	//タイムUIのテクスチャハンドル
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeUiTexture;
-
 	//攻撃表示テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_attackTexture;
 
@@ -130,7 +122,7 @@ private:
 	std::unique_ptr<Monster> m_Bos;
 
 	//敵群
-	std::unique_ptr<Monster> m_Enemy[10];
+	std::list<Monster*> m_Enemys;
 
 	//衝突判定フラグ
 	bool m_hitFlag;
@@ -146,4 +138,10 @@ private:
 
 	//リザルトシーン
 	std::unique_ptr<ResultScene> m_ResultScene;
+	
+	/// <summary>
+	/// 定数
+	/// </summary>
+
+	const int POP_ENEMY_NUM = 10;
 };
