@@ -17,6 +17,7 @@
 #include "Barrett.h"
 #include "SpriteResources.h"
 #include "Monster.h"
+#include "gameTimer.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -150,6 +151,6 @@ private:
 	//リザルトフラグ
 	bool m_resultFlag;
 
-	//時間
-	int m_gameTime;
+	//ゲーム時間クラス
+	std::unique_ptr<GameTimer> m_GameTime;
 };

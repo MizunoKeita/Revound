@@ -57,8 +57,6 @@ void Game::Initialize(HWND window, int width, int height)
 	m_titleFlag = true;
 	//リザルトフラグをオフ
 	m_resultFlag = false;
-	//タイムを初期化
-	m_gameTime = 60;
 
 }
 
@@ -77,21 +75,17 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer)
 {
     int elapsedTime = float(timer.GetElapsedSeconds());
+
 	static float moveX = 0.0f;
 	static float moveZ = 0.0f;
-	static int Count = 0;
-	Count++;
+
 	if (m_titleFlag == false)
 	{
-		if (Count == 60)
-		{
-			m_gameTime--;
-			Count = 0;
-		}
-		if (m_gameTime <= 0)
+		m_GameTime->Update();
+
+		if (m_GameTime->GetTimeLimit() <= 0)
 		{
 			m_resultFlag = true;
-			m_gameTime = 0;
 		}
 	}
 	
@@ -194,7 +188,8 @@ void Game::Update(DX::StepTimer const& timer)
 		m_titleFlag = true;
 		m_player->SetStatus();
 		m_Bos->state(1);
-		m_gameTime = 60;
+		m_GameTime->ResetGameTime();
+
 		for (int i = 0; i < 10; i++)
 		{
 			m_Enemy[i]->state(1);
@@ -346,9 +341,9 @@ void Game::Render()
 		//ステージ選択画面//
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
 		//残り時間
-		int hundredTime = m_gameTime / 100;
-		int tenTime = (m_gameTime - hundredTime * 100)  / 10;
-		int oneTime = (m_gameTime - (hundredTime * 100 + tenTime * 10));
+		int hundredTime = m_GameTime->GetTimeLimit() / 100;
+		int tenTime = (m_GameTime->GetTimeLimit() - hundredTime * 100)  / 10;
+		int oneTime = (m_GameTime->GetTimeLimit() - (hundredTime * 100 + tenTime * 10));
 
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
@@ -360,7 +355,7 @@ void Game::Render()
 	{
 		SpriteResources::GetInstance()->m_sprites->Draw(m_resultTexture.Get(), Vector2(0, 0));
 	}
-	if (m_gameTime == 0)
+	if (m_GameTime->GetTimeLimit() == 0)
 	{
 		SpriteResources::GetInstance()->m_sprites->Draw(m_gameOverTexture.Get(), Vector2(0, 0));
 	}
@@ -566,6 +561,8 @@ void Game::CreateDeviceDependentResources()
 		m_Enemy[i]->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
 		m_Enemy[i]->SetCollision(sphere);
 	}
+
+	m_GameTime = std::make_unique<GameTimer>();
 
 	// TODO: Initialize device dependent objects here (independent of window size).
 	device;

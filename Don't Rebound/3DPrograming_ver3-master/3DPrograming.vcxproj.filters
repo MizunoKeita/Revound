@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\SpriteResources.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Monster.h" />
+    <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\SpriteResources.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Monster.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
