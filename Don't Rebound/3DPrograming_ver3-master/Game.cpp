@@ -57,7 +57,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_TitleScene->SetFlag(true);
 
 	//リザルトフラグをオフ
-	m_resultFlag = false;
+	m_ResultScene->SetFlag(false);
 
 }
 
@@ -84,9 +84,9 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_GameTime->Update();
 
-		if (m_GameTime->GetTimeLimit() <= 0)
+		if (m_player->GetHp() <= 0 || m_GameTime->GetTimeLimit() <= 0)
 		{
-			m_resultFlag = true;
+			m_ResultScene->SetFlag(true,2);
 		}
 	}
 	
@@ -182,10 +182,10 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 	
 	//リザルトシーンでBが押されたらタイトルに移行
-	if (GetKeyState('B') & 0x8000 && m_resultFlag == true)
+	if (GetKeyState('B') & 0x8000 && m_ResultScene->GetFlag() == true)
 	{
 		//初期化する
-		m_resultFlag = false;
+		m_ResultScene->SetFlag(false);
 		m_TitleScene->SetFlag(true);
 		m_player->SetStatus();
 		m_Bos->state(1);
@@ -197,10 +197,10 @@ void Game::Update(DX::StepTimer const& timer)
 		}	
 	}
 
-	if (m_player->GetHp() <= 0 || m_Bos->GetState() == 0)
+	if (m_Bos->GetState() == 0)
 	{
 		//リザルトシーンに移行
-		m_resultFlag = true;
+		m_ResultScene->SetFlag(true, 1);
 	}
 
 	m_debugCamera->SetyTmp(m_player->Getdirection());
@@ -309,8 +309,6 @@ void Game::Render()
 	//Begin 関数にアルファブレンドのステートを設定します
 	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-	m_TitleScene->Render();
-
 	//UIの描画
 	if (m_hitFlag == true)
 	{
@@ -348,21 +346,17 @@ void Game::Render()
 		SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
 	}
 
-	//リザルト//
-	if (m_resultFlag == true)
-	{
-		SpriteResources::GetInstance()->m_sprites->Draw(m_resultTexture.Get(), Vector2(0, 0));
-	}
-	if (m_GameTime->GetTimeLimit() == 0)
-	{
-		SpriteResources::GetInstance()->m_sprites->Draw(m_gameOverTexture.Get(), Vector2(0, 0));
-	}
-
 	//Playerの攻撃表示
-	if (m_player->GetMoveCount() == 1 && m_resultFlag == false)
+	if (m_player->GetMoveCount() == 1 && m_ResultScene->GetFlag() == false)
 	{
 		SpriteResources::GetInstance()->m_sprites->Draw(m_attackTexture.Get(), Vector2(0, 0));
 	}
+
+	//タイトル
+	m_TitleScene->Render();
+
+	//リザルト
+	m_ResultScene->Render();
 
 	//スプライトの描画はここまで
 	SpriteResources::GetInstance()->m_sprites->End();
@@ -492,12 +486,6 @@ void Game::CreateDeviceDependentResources()
 	//タイムUIテクスチャ
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_timeUiTexture.GetAddressOf());
 
-	//リザルトテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Result.png", nullptr, m_resultTexture.GetAddressOf());
-	
-	//ゲームオーバーテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Over.png", nullptr, m_gameOverTexture.GetAddressOf());
-
 	// エフェクトの作成
 	m_batchEffect = std::make_unique<AlphaTestEffect>(device);
 	m_batchEffect->SetAlphaFunction(D3D11_COMPARISON_EQUAL);
@@ -562,6 +550,9 @@ void Game::CreateDeviceDependentResources()
 
 	//タイトルシーンを作成
 	m_TitleScene = std::make_unique<TitleScene>();
+
+	//リザルトシーンを作成
+	m_ResultScene = std::make_unique<ResultScene>();
 
 	// TODO: Initialize device dependent objects here (independent of window size).
 	device;

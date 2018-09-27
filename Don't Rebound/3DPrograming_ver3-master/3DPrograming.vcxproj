@@ -157,6 +157,7 @@
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Monster.h" />
+    <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\ResultScene.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\SpriteResources.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\TitleScene.h" />
     <ClInclude Include="Collision.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Monster.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\ResultScene.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\SpriteResources.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\TitleScene.cpp" />
     <ClCompile Include="CollisionSphere.cpp" />
