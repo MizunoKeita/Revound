@@ -20,7 +20,24 @@ void Monster::Render()
 {
 	if (m_game&&m_model)
 	{
-		//ƒ‚ƒfƒ‹‚ð•`‰æ
-		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
+		if (m_active == true)
+		{
+			//ƒ‚ƒfƒ‹‚ð•`‰æ
+			m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
+		}
 	}
+}
+
+void Monster::Dead()
+{
+	m_active = false;
+
+	m_enable = false;
+}
+
+void Monster::Alive()
+{
+	m_active = true;
+
+	m_enable = true;
 }

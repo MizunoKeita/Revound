@@ -8,7 +8,7 @@ void CollisionSphere::SetCollision(Collision::Sphere sphere)
 	//ƒRƒŠƒWƒ‡ƒ“î•ñ‚Ìİ’è
 	m_collision = sphere;
 
-	m_state = 1;
+	m_enable = true;
 
 	if (m_game)
 	{
@@ -35,13 +35,13 @@ void CollisionSphere::DrawCollision()
 }
 
 //ó‘Ô‚ğİ’è‚·‚é
-void CollisionSphere::state(int state)
+void CollisionSphere::SetEnable(int enable)
 {
-	m_state = state;
+	m_enable = enable;
 }
 
 //ó‘Ô‚ğæ“¾‚·‚é
-int CollisionSphere::GetState()
+int CollisionSphere::GetEnable()
 {
-	return m_state;
+	return m_enable;
 }

@@ -35,6 +35,9 @@ public:
 	//描画
 	virtual void Render();
 
+	//アクティブを取得する
+	bool GetActive();
+
 	//ゲームオブジェクトを設定する関数
 	void SetGame(Game* game) { m_game = game; }
 
@@ -47,4 +50,5 @@ public:
 	//回転を設定する関数
 	void SetRotation(Quaternion rotation) { m_rotation = rotation; }
 
+	bool m_active;
 };

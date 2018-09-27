@@ -11,4 +11,9 @@ public:
 	//•`‰æ
 	void Render();
 
+	//€‚ñ‚¾‚ç“–‚½‚è”»’è‚â•\¦‚ğÁ‚·
+	void Dead();
+
+	//¶‚«•Ô‚é
+	void Alive();
 };

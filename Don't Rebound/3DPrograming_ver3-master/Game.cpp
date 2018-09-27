@@ -168,35 +168,23 @@ void Game::Update(DX::StepTimer const& timer)
 	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Bos->GetCollision()) == true)
 	{
 		//ボスの表示を消す
-		m_Bos->state(0);
+		m_Bos->Dead();
 	}
-
-	//Playerと雑魚敵の当たり判定
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Enemy[i]->GetCollision()) == true)
-	//	{
-	//		//PlayerのHPを減らす
-	//		m_player->SubHp(0.2f);
-	//	} 
-	//	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Enemy[i]->GetCollision()) == true)
-	//	{
-	//		//雑魚の表示を消す
-	//		m_Enemy[i]->state(0);
-	//	}
-	//}
 
 	for each (auto enemy in m_Enemys)
 	{
-		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), enemy->GetCollision()) == true)
+		if (enemy->m_enable == true)
 		{
-			//PlayerのHPを減らす
-			m_player->SubHp(0.2f);
-		}
-		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), enemy->GetCollision()) == true)
-		{
-			//雑魚の表示を消す
-			enemy->state(0);
+			if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), enemy->GetCollision()) == true)
+			{
+				//PlayerのHPを減らす
+				m_player->SubHp(0.5f);
+			}
+			if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), enemy->GetCollision()) == true)
+			{
+				//雑魚の表示を消す
+				enemy->Dead();
+			}
 		}
 	}
 	
@@ -207,16 +195,16 @@ void Game::Update(DX::StepTimer const& timer)
 		m_ResultScene->SetFlag(false);
 		m_TitleScene->SetFlag(true);
 		m_player->SetStatus();
-		m_Bos->state(1);
+		m_Bos->Alive();
 		m_GameTime->ResetGameTime();
 
 		for each (auto enemy in m_Enemys)
 		{
-			enemy->state(1);
+			enemy->Alive();
 		}	
 	}
 
-	if (m_Bos->GetState() == 0)
+	if (m_Bos->GetEnable() == false)
 	{
 		//リザルトシーンに移行
 		m_ResultScene->SetFlag(true, 1);
@@ -308,7 +296,7 @@ void Game::Render()
 	m_barrett->Render();
 
 	//ボスの描画
-	if (m_Bos->GetState() == 1)
+	if (m_Bos->GetActive() == true)
 	{
 		m_Bos->Render();
 		//m_tsit->DrawCollision();
@@ -317,7 +305,7 @@ void Game::Render()
 	//雑魚敵の描画
 	for each (auto enemy in m_Enemys)
 	{
-		if (enemy->GetState() == 1)
+		if (enemy->GetActive() == true)
 		{
 			enemy->Render();
 		}

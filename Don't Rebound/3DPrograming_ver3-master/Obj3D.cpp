@@ -8,6 +8,7 @@ using namespace DirectX::SimpleMath;
 
 Obj3D::Obj3D():m_game(nullptr),m_model(nullptr)
 {
+	m_active = true;
 }
 
 bool Obj3D::Update(float elapsedTime)
@@ -24,4 +25,9 @@ void Obj3D::Render()
 		//ƒ‚ƒfƒ‹‚Ì•`‰æ
 		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 	}
+}
+
+bool Obj3D::GetActive()
+{
+	return m_active;
 }
