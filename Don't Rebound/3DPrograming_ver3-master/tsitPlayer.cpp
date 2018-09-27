@@ -2,6 +2,7 @@
 #include "tsitPlayer.h"
 #include "Game.h"
 #include "Math.h"
+#include "DebugCamera.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -68,8 +69,15 @@ void tsitPlayer::Render()
 {
 	if (m_game&&m_model)
 	{
+
+		// ビュー行列の作成
+		DirectX::SimpleMath::Matrix view = DebugCamera::GetView();
+
+		// プロジェクション行列の作成
+		DirectX::SimpleMath::Matrix projection = DebugCamera::GetProjection();
+
 		//モデルを描画
-		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, view, projection);
 	}
 }
 

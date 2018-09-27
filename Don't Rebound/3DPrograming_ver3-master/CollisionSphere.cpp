@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CollisionSphere.h"
 #include "Game.h"
+#include "DebugCamera.h"
 
 void CollisionSphere::SetCollision(Collision::Sphere sphere)
 {
@@ -29,7 +30,7 @@ void CollisionSphere::DrawCollision()
 	if (m_game)
 	{
 		//Debug—pƒRƒŠƒWƒ‡ƒ“‚Ì•`‰æ
-		m_obj->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+		m_obj->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 	}
 }
 

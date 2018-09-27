@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Obj3D.h"
 #include "Game.h"
+#include "DebugCamera.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -21,6 +22,6 @@ void Obj3D::Render()
 	if (m_model&&m_game)
 	{
 		//ƒ‚ƒfƒ‹‚Ì•`‰æ
-		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 	}
 }

@@ -14,6 +14,12 @@ using namespace DirectX::SimpleMath;
 
 const float DebugCamera::DEFAULT_CAMERA_DISTANCE = 5.0f;
 
+//ゲームビュー行列
+DirectX::SimpleMath::Matrix DebugCamera::m_gameView;
+
+// 射影行列
+DirectX::SimpleMath::Matrix DebugCamera::m_projection;
+
 //--------------------------------------------------------------------------------------
 // コンストラクタ
 //--------------------------------------------------------------------------------------
@@ -61,6 +67,21 @@ void DebugCamera::Update(Vector3 pos)
 	m_target = target;
 
 	m_view = Matrix::CreateLookAt(eye +pos, target + pos, up);
+	
+	m_gameView = m_view;
+
+	// ウインドウサイズからアスペクト比を算出する
+	RECT size = DX::DeviceResources::GetInstance()->GetOutputSize();
+	float aspectRatio = float(size.right) / float(size.bottom);
+
+	// 画角を設定
+	float fovAngleY = XMConvertToRadians(45.0f);
+
+	// 射影行列を作成する
+	m_projection = Matrix::CreatePerspectiveFieldOfView(fovAngleY, aspectRatio, 0.01f, 1000.0f);
+
+	// デバッグカメラにウインドウのサイズ変更を伝える
+	SetWindowSize(size.right, size.bottom);
 }
 
 //--------------------------------------------------------------------------------------
@@ -109,4 +130,16 @@ void DebugCamera::SetWindowSize(int windowWidth, int windowHeight)
 void DebugCamera::SetyTmp(float y)
 {
 	m_yTmp = -y;
+}
+
+const DirectX::SimpleMath::Matrix DebugCamera::GetView()
+{
+	// TODO: return ステートメントをここに挿入します
+	return m_gameView;
+}
+
+const DirectX::SimpleMath::Matrix DebugCamera::GetProjection()
+{
+	// TODO: return ステートメントをここに挿入します
+	return m_projection; 
 }

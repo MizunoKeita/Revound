@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CollisionSphere.h"
+#include "DebugCamera.h"
 
 class Barrett : public CollisionSphere
 {

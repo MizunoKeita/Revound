@@ -225,9 +225,6 @@ void Game::Render()
 
 	DX::DeviceResources::GetInstance()->PIXBeginEvent(L"Render");
 	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
-
-	// ビュー行列の作成
-	m_view = m_debugCamera->GetCameraMatrix();
 	
 	//ライト
 	auto SetLight = [&](IEffect* effect)
@@ -277,11 +274,17 @@ void Game::Render()
 
 	Matrix world = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f));
 
+	// ビュー行列の作成
+	DirectX::SimpleMath::Matrix view = m_debugCamera->GetView();
+
+	// プロジェクション行列の作成
+	DirectX::SimpleMath::Matrix projection = m_debugCamera->GetProjection();
+
 	//スカイボックスの描画
-	m_sky->Draw(context, *m_states.get(), world, m_view, m_projection);
+	m_sky->Draw(context, *m_states.get(), world, view, projection);
 
 	//フィールドの描画
-	field->Draw(context, *m_states.get(), world, m_view, m_projection);
+	field->Draw(context, *m_states.get(), world, view, projection);
 
 	//プレイヤーの描画
 	m_player->Render();
@@ -585,18 +588,7 @@ void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
 
-	// ウインドウサイズからアスペクト比を算出する
-	RECT size = DX::DeviceResources::GetInstance()->GetOutputSize();
-	float aspectRatio = float(size.right) / float(size.bottom);
 
-	// 画角を設定
-	float fovAngleY = XMConvertToRadians(45.0f);
-
-	// 射影行列を作成する
-	m_projection = Matrix::CreatePerspectiveFieldOfView(fovAngleY, aspectRatio, 0.01f, 1000.0f);
-
-	// デバッグカメラにウインドウのサイズ変更を伝える
-	m_debugCamera->SetWindowSize(size.right, size.bottom);
 }
 
 void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float HP)
@@ -627,8 +619,8 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 
 	//// 不透明のみ描画する設定
 	m_batchEffect->SetWorld(world);
-	m_batchEffect->SetView(m_view);
-	m_batchEffect->SetProjection(m_projection);
+	m_batchEffect->SetView(m_debugCamera->GetView());
+	m_batchEffect->SetProjection(m_debugCamera->GetProjection());
 	m_batchEffect->SetTexture(texture.Get());
 	m_batchEffect->Apply(context);
 

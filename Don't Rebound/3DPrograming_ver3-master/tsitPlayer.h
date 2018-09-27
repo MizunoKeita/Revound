@@ -55,4 +55,5 @@ public:
 	void SetStatus();
 
 	Quaternion GetRotation();
+
 };

@@ -56,7 +56,7 @@ void Barrett::Render()
 		if (m_moveCount >= 0)
 		{
 			//ƒ‚ƒfƒ‹‚ð•`‰æ
-			m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+			m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 		}
 	}
 }
