@@ -13,6 +13,8 @@ Monster::Monster()
 
 	m_TrackingDirLast = 0.0f;
 
+	m_Radius = 0.01f;
+
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
 
@@ -31,8 +33,11 @@ bool Monster::Update(float elapsedTime)
 	//正規化
 	m_TrackingPos.Normalize();
 
-	//スピードをかける
-	m_position += m_TrackingPos*0.1f;
+	if (CircleCollision() == true)
+	{
+		//スピードをかける
+		m_position += m_TrackingPos*0.1f;
+	}
 
 	//atan2で向きを求める
 	m_TrackingDir = atan2(m_PlayerPosStorage.x - m_position.x, m_PlayerPosStorage.z - m_position.z);
@@ -82,3 +87,37 @@ void Monster::GetPlayerRot(Quaternion rot)
 	m_PlayerRotStorage = rot;
 }
 
+void Monster::GetPlayerRadius(float radius)
+{
+	m_PlayerRadiusStorage = radius;
+}
+
+bool Monster::CircleCollision()
+{
+	// X座標の距離を求める->二乗することによって正の値にする
+	int dx = m_PlayerPosStorage.x - m_position.x;
+	int dx2 = dx * dx;
+
+	// Y座標の距離を求める->二乗することによって正の値にする
+	int dz = m_PlayerPosStorage.z - m_position.z;
+	int dz2 = dz * dz;
+
+	// オブジェクトAとオブジェクトBの距離を求める
+	int d2 = (dx2 + dz2);
+
+	// オブジェクトAの半径とオブジェクトBの半径を足す->二乗することでd2と比べられるようになる
+	int r = m_PlayerRadiusStorage + m_Radius;
+	int r2 = r * r;
+
+	// A,Bの距離よりA半径+B半径のほうが大きかったら
+	if (r2 > d2)
+	{
+		//当たった
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}

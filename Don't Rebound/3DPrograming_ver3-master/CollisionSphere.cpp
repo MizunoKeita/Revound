@@ -45,3 +45,4 @@ int CollisionSphere::GetEnable()
 {
 	return m_enable;
 }
+

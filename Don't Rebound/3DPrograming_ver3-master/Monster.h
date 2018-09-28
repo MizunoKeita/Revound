@@ -14,6 +14,9 @@ public:
 	//プレイヤーの回転を保存
 	Quaternion m_PlayerRotStorage;
 	
+	//プレイヤーの半径を保存
+	float m_PlayerRadiusStorage;
+
 	//追尾量
 	Vector3 m_TrackingPos;
 
@@ -28,6 +31,9 @@ public:
 
 	//円周率
 	float m_PI;
+
+	//視覚フラグ
+	bool m_WitnessFlag;
 
 	//更新
 	bool Update(float elapsedTime);
@@ -47,5 +53,10 @@ public:
 	//プレイヤーの座標を取得
 	void GetPlayerRot(Quaternion rot);
 
+	//プレイヤーの半径を取得
+	void GetPlayerRadius(float radius);
+
 	const float MONSTER_SPEED = 0.1f;
+
+	bool CircleCollision();
 };

@@ -22,6 +22,9 @@ protected:
 	//‰ñ“]
 	Quaternion m_rotation;
 
+	//”¼Œa
+	float m_Radius;
+
 	//ƒ[ƒ‹ƒhs—ñ
 	Matrix m_world;
 

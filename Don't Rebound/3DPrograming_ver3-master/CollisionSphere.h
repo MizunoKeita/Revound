@@ -30,4 +30,5 @@ public:
 	std::unique_ptr<DebugSphere> m_obj;
 
 	bool m_enable;
+
 };

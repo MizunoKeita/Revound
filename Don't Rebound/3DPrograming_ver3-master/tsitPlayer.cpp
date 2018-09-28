@@ -13,6 +13,7 @@ tsitPlayer::tsitPlayer() :m_direction(0.0f), m_moveFlag(STOP)
 	m_Hp = 100.0f;
 	m_start = Vector3(-5.0f, 0.0f, -5.0f);
 	m_position = m_start;
+	m_Radius = 0.1f;
 
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
@@ -110,6 +111,11 @@ Vector3 tsitPlayer::getPos()
 float tsitPlayer::Getdirection()
 {
 	return m_direction;
+}
+
+float tsitPlayer::GetRadius()
+{
+	return m_Radius;
 }
 
 float tsitPlayer::GetHp()

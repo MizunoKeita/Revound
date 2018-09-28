@@ -48,6 +48,8 @@ public:
 
 	float Getdirection();
 
+	float GetRadius();
+
 	float GetHp();
 
 	void SubHp(float hp);

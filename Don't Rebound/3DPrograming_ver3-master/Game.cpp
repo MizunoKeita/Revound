@@ -149,6 +149,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		enemy->GetPlayerPos(m_player->getPos());
 		enemy->GetPlayerRot(m_player->GetRotation());
+		enemy->GetPlayerRadius(m_player->GetRadius());
 		enemy->Update(elapsedTime);
 	}
 
