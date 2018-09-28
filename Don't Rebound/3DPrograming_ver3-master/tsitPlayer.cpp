@@ -2,6 +2,7 @@
 #include "tsitPlayer.h"
 #include "Game.h"
 #include "Math.h"
+#include "DebugCamera.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -12,6 +13,15 @@ tsitPlayer::tsitPlayer() :m_direction(0.0f), m_moveFlag(STOP)
 	m_Hp = 100.0f;
 	m_start = Vector3(-5.0f, 0.0f, -5.0f);
 	m_position = m_start;
+
+	//デバイスの取得
+	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
+
+	// エフェクトファクトリー
+	EffectFactory fx(device);
+
+	//モデルを取得
+	m_model = Model::CreateFromCMO(device, L"Resources\\Models\\redmen.cmo", fx);
 }
 
 bool tsitPlayer::Update(float elapsedTime)
@@ -22,16 +32,16 @@ bool tsitPlayer::Update(float elapsedTime)
 	switch (m_moveFlag)
 	{
 	case FORWARD:		//前進
-		v.z = 0.1f;
+		v.z = PLAYER_SPEED;
 		break;	 
 	case BACK:			//後退
-		v.z = -0.1f;
+		v.z = -PLAYER_SPEED;
 		break;	 
 	case RIGHT_TURN:	//右回転
-		m_direction -= XMConvertToRadians(1.0f);
+		m_direction -= XMConvertToRadians(TURN_AROUND_SPEED);
 		break;
 	case LEFT_TURN:		//左回転
-		m_direction += XMConvertToRadians(1.0f);
+		m_direction += XMConvertToRadians(TURN_AROUND_SPEED);
 		break;
 	case ATTACK:		//攻撃
 		v.z = 0.5f;
@@ -69,7 +79,7 @@ void tsitPlayer::Render()
 	if (m_game&&m_model)
 	{
 		//モデルを描画
-		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+		m_model->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 	}
 }
 

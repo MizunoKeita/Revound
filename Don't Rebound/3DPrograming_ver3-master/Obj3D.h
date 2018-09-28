@@ -7,13 +7,14 @@ class Game;
 
 class Obj3D
 {
+public:
+	//モデルハンドル
+	std::unique_ptr<Model> m_model;
+
 protected:
 
 	//ゲームオブジェクトへのポインタ
 	Game* m_game;
-
-	//モデルハンドル
-	Model* m_model;
 
 	//位置
 	Vector3 m_position;
@@ -23,6 +24,7 @@ protected:
 
 	//ワールド行列
 	Matrix m_world;
+
 public:
 	//コンストラクタ
 	Obj3D();
@@ -33,11 +35,14 @@ public:
 	//描画
 	virtual void Render();
 
+	//アクティブを取得する
+	bool GetActive();
+
 	//ゲームオブジェクトを設定する関数
 	void SetGame(Game* game) { m_game = game; }
 
 	//モデルハンドルを設定する関数
-	void SetModel(Model* model) { m_model = model; }
+	//void SetModel(Model* model) { m_model = model; }
 
 	//位置を設定する関数
 	void SetPosirion(Vector3 position) { m_position = position; }
@@ -45,4 +50,5 @@ public:
 	//回転を設定する関数
 	void SetRotation(Quaternion rotation) { m_rotation = rotation; }
 
+	bool m_active;
 };

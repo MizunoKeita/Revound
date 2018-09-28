@@ -23,6 +23,27 @@ namespace DirectX
     class CommonStates
     {
     public:
+		////ƒVƒ“ƒOƒ‹ƒgƒ“
+		//static CommonStates *GetInstance()
+		//{
+		//	s_CommonStates = s_CommonStates ? s_CommonStates : Create();
+		//	return s_CommonStates;
+		//}
+
+		////ì¬
+		//static CommonStates* Create()
+		//{
+		//	return new CommonStates;
+		//}
+
+		////íœ
+		//static void Destroy()
+		//{
+		//	delete s_CommonStates;
+		//	s_CommonStates = NULL;
+		//}
+
+		//CommonStates();
         explicit CommonStates(_In_ ID3D11Device* device);
         CommonStates(CommonStates&& moveFrom);
         CommonStates& operator= (CommonStates&& moveFrom);
@@ -62,5 +83,8 @@ namespace DirectX
         class Impl;
 
         std::shared_ptr<Impl> pImpl;
+
+	protected:
+		static CommonStates *s_CommonStates;
     };
 }

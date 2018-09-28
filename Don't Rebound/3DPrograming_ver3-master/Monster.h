@@ -1,0 +1,50 @@
+#pragma once
+#include "CollisionSphere.h"
+
+class Monster :public CollisionSphere
+{
+public:
+
+	//コンストラクタ
+	Monster();
+
+	//プレイヤーの座標を保存
+	Vector3 m_PlayerPosStorage;
+
+	//プレイヤーの回転を保存
+	Quaternion m_PlayerRotStorage;
+	
+	//追尾量
+	Vector3 m_TrackingPos;
+
+	//プレイヤーの方の向き
+	Vector2 m_Dir;
+
+	//追尾する向き
+	float m_TrackingDir;
+
+	//追尾する向き
+	float m_TrackingDirLast;
+
+	//円周率
+	float m_PI;
+
+	//更新
+	bool Update(float elapsedTime);
+	
+	//描画
+	void Render();
+
+	//死んだら当たり判定や表示を消す
+	void Dead();
+
+	//生き返る
+	void Alive();
+
+	//プレイヤーの座標を取得
+	void GetPlayerPos(Vector3 pos);
+
+	//プレイヤーの座標を取得
+	void GetPlayerRot(Quaternion rot);
+
+};

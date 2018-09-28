@@ -20,38 +20,44 @@ using Microsoft::WRL::ComPtr;
 
 Game::Game()
 {
-    m_deviceResources = std::make_unique<DX::DeviceResources>();
-    m_deviceResources->RegisterDeviceNotify(this);
+	//DeviceResourcesの作成
+	DX::DeviceResources::Create();
+
+	//Keyboardの作成
+	Keyboard::Create();
+
+	//Mouseの作成
+	Mouse::Create();
+
+	//SpriteResourcesの作成
+	SpriteResources::Create();
 }
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
-	// キーボードの作成
-	m_keyboard = std::make_unique<Keyboard>();
-
-	// マウスの作成
-	m_mouse = std::make_unique<Mouse>();
-	m_mouse->SetWindow(window);
+	// マウスの稼働できるウィンドウの設定
+	Mouse::Get().SetWindow(window);
 
 	// デバッグカメラの作成
 	m_debugCamera = std::make_unique<DebugCamera>(width, height);
 
-    m_deviceResources->SetWindow(window, width, height);
-    m_deviceResources->CreateDeviceResources();
+	DX::DeviceResources* deviceResources = DX::DeviceResources::GetInstance();
+
+	deviceResources->SetWindow(window, width, height);
+	deviceResources->CreateDeviceResources();
     CreateDeviceDependentResources();
-    m_deviceResources->CreateWindowSizeDependentResources();
+	deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
 
 	//タイトルフラグをオン
-	m_titleFlag = true;
+	m_TitleScene->SetFlag(true);
+
 	//リザルトフラグをオフ
-	m_resultFlag = false;
-	//タイムを初期化
-	m_gameTime = 60;
+	m_ResultScene->SetFlag(false);
 
 }
 
@@ -70,21 +76,17 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer)
 {
     int elapsedTime = float(timer.GetElapsedSeconds());
+
 	static float moveX = 0.0f;
 	static float moveZ = 0.0f;
-	static int Count = 0;
-	Count++;
-	if (m_titleFlag == false)
+
+	if (m_TitleScene->GetFlag() == false)
 	{
-		if (Count == 60)
+		m_GameTime->Update();
+
+		if (m_player->GetHp() <= 0 || m_GameTime->GetTimeLimit() <= 0)
 		{
-			m_gameTime--;
-			Count = 0;
-		}
-		if (m_gameTime <= 0)
-		{
-			m_resultFlag = true;
-			m_gameTime = 0;
+			m_ResultScene->SetFlag(true,2);
 		}
 	}
 	
@@ -96,22 +98,22 @@ void Game::Update(DX::StepTimer const& timer)
 	
 	if (GetKeyState('A') & 0x8000) {
 		//左に旋回
-		moveX +=0.1f;
+		moveX += m_player->TURN_AROUND_SPEED;
 		m_player->Move(tsitPlayer::LEFT_TURN);
 	}
 	else if (GetKeyState('D') & 0x8000) {
 		//右に旋回
-		moveX -= 0.1f;
+		moveX -= m_player->TURN_AROUND_SPEED;
 		m_player->Move(tsitPlayer::RIGHT_TURN);
 	}
 	else if (GetKeyState('W') & 0x8000) {
 		//前進
-		moveZ += 0.1f;
+		moveZ += m_player->PLAYER_SPEED;
 		m_player->Move(tsitPlayer::FORWARD);
 	}
 	else if (GetKeyState('S') & 0x8000) {
 		//後退
-		moveZ -= 0.1f;
+		moveZ -= m_player->PLAYER_SPEED;
 		m_player->Move(tsitPlayer::BACK);
 	}
 	else if (GetKeyState(' ') & 0x8000) {
@@ -131,7 +133,7 @@ void Game::Update(DX::StepTimer const& timer)
 	//タイトルからプレイシーンに移動
 	if (GetKeyState(' ') & 0x8000)
 	{
-		m_titleFlag = false;
+		m_TitleScene->SetFlag(false);
 	}
 
 	//プレイヤーの更新
@@ -141,63 +143,67 @@ void Game::Update(DX::StepTimer const& timer)
 	m_barrett->Update(m_player->GetRotation(), m_player->getPos(), m_player->Getdirection());
 
 	//敵の更新
-	m_tsit->Update(elapsedTime);
+	m_Bos->Update(elapsedTime);
 
-	//雑魚敵の更新
-	for (int i = 0; i < 10; i++)
+	for each (auto enemy in m_Enemys)
 	{
-		m_tsits[i]->Update(elapsedTime);
+		enemy->GetPlayerPos(m_player->getPos());
+		enemy->GetPlayerRot(m_player->GetRotation());
+		enemy->Update(elapsedTime);
 	}
 
 	m_hitFlag = false;
 
 	//Playerとボスの当たり判定
-	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_tsit->GetCollision()) == true)
+	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Bos->GetCollision()) == true)
 	{
 		m_hitFlag = true;
 	}
 
 	//弾とボスの当たり判定
-	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_tsit->GetCollision()) == true)
+	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Bos->GetCollision()) == true)
 	{
 		//ボスの表示を消す
-		m_tsit->state(0);
+		m_Bos->Dead();
 	}
 
-	//Playerと雑魚敵の当たり判定
-	for (int i = 0; i < 10; i++)
+	for each (auto enemy in m_Enemys)
 	{
-		if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_tsits[i]->GetCollision()) == true)
+		if (enemy->m_enable == true)
 		{
-			//PlayerのHPを減らす
-			m_player->SubHp(0.2f);
-		} 
-		if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_tsits[i]->GetCollision()) == true)
-		{
-			//雑魚の表示を消す
-			m_tsits[i]->state(0);
+			if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), enemy->GetCollision()) == true)
+			{
+				//PlayerのHPを減らす
+				m_player->SubHp(0.5f);
+			}
+			if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), enemy->GetCollision()) == true)
+			{
+				//雑魚の表示を消す
+				enemy->Dead();
+			}
 		}
 	}
 	
 	//リザルトシーンでBが押されたらタイトルに移行
-	if (GetKeyState('B') & 0x8000 && m_resultFlag == true)
+	if (GetKeyState('B') & 0x8000 && m_ResultScene->GetFlag() == true)
 	{
 		//初期化する
-		m_resultFlag = false;
-		m_titleFlag = true;
+		m_ResultScene->SetFlag(false);
+		m_TitleScene->SetFlag(true);
 		m_player->SetStatus();
-		m_tsit->state(1);
-		m_gameTime = 60;
-		for (int i = 0; i < 10; i++)
+		m_Bos->Alive();
+		m_GameTime->ResetGameTime();
+
+		for each (auto enemy in m_Enemys)
 		{
-			m_tsits[i]->state(1);
+			enemy->Alive();
 		}	
 	}
 
-	if (m_player->GetHp() <= 0 || m_tsit->GetState() == 0)
+	if (m_Bos->GetEnable() == false)
 	{
 		//リザルトシーンに移行
-		m_resultFlag = true;
+		m_ResultScene->SetFlag(true, 1);
 	}
 
 	m_debugCamera->SetyTmp(m_player->Getdirection());
@@ -216,12 +222,8 @@ void Game::Render()
 
 	Clear();
 
-	m_deviceResources->PIXBeginEvent(L"Render");
-	auto context = m_deviceResources->GetD3DDeviceContext();
-
-	// ビュー行列の作成
-	m_view = m_debugCamera->GetCameraMatrix();
-	Matrix world;
+	DX::DeviceResources::GetInstance()->PIXBeginEvent(L"Render");
+	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 	
 	//ライト
 	auto SetLight = [&](IEffect* effect)
@@ -269,13 +271,19 @@ void Game::Render()
 		}
 	});
 
-	world = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f));
+	Matrix world = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f));
+
+	// ビュー行列の作成
+	DirectX::SimpleMath::Matrix view = m_debugCamera->GetView();
+
+	// プロジェクション行列の作成
+	DirectX::SimpleMath::Matrix projection = m_debugCamera->GetProjection();
 
 	//スカイボックスの描画
-	m_sky->Draw(context, *m_states.get(), world, m_view, m_projection);
+	m_sky->Draw(context, *m_states.get(), world, view, projection);
 
 	//フィールドの描画
-	field->Draw(context, *m_states.get(), world, m_view, m_projection);
+	field->Draw(context, *m_states.get(), world, view, projection);
 
 	//プレイヤーの描画
 	m_player->Render();
@@ -284,36 +292,36 @@ void Game::Render()
 	m_barrett->Render();
 
 	//ボスの描画
-	if (m_tsit->GetState() == 1)
+	if (m_Bos->GetActive() == true)
 	{
-		m_tsit->Render();
+		m_Bos->Render();
 		//m_tsit->DrawCollision();
 	}
 
 	//雑魚敵の描画
-	for (int i = 0; i < 10; i++)
+	for each (auto enemy in m_Enemys)
 	{
-		if (m_tsits[i]->GetState() == 1)
+		if (enemy->GetActive() == true)
 		{
-			m_tsits[i]->Render();
+			enemy->Render();
 		}
 	}
 	
 	//スプライトの描画はここから
 	//m_sprites->Begin();
 	//Begin 関数にアルファブレンドのステートを設定します
-	m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
+	SpriteResources::GetInstance()->m_sprites->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
 	//UIの描画
 	if (m_hitFlag == true)
 	{
 		if (m_player->GetMoveCount() == 1)
 		{
-			m_font->DrawString(m_sprites.get(), L"Attack!!!", Vector2(0.0f, 0.0f));
+			SpriteResources::GetInstance()->m_font->DrawString(SpriteResources::GetInstance()->m_sprites.get(), L"Attack!!!", Vector2(0.0f, 0.0f));
 		}
 		else
 		{
-			m_font->DrawString(m_sprites.get(), L"Hit!", Vector2(0.0f, 0.0f));
+			SpriteResources::GetInstance()->m_font->DrawString(SpriteResources::GetInstance()->m_sprites.get(), L"Hit!", Vector2(0.0f, 0.0f));
 		}
 	}
 
@@ -327,70 +335,52 @@ void Game::Render()
 	//DrawSprite3D(world, m_timeUiTexture, 100.0f);
 
 	//タイトル//
-	if (m_titleFlag == true)
+	if (m_TitleScene->GetFlag() != true)
 	{
-		//RECT a{ 100,100,300,300 };
-		m_sprites->Draw(m_titleTexture.Get(), Vector2(0, 0));
-	}
-	else
-	{
-		//ステージ選択画面//
-		m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
-		//残り時間
-		int hundredTime = m_gameTime / 100;
-		int tenTime = (m_gameTime - hundredTime * 100)  / 10;
-		int oneTime = (m_gameTime - (hundredTime * 100 + tenTime * 10));
-
-		m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
-		m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
-		m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
-	}
-
-	//リザルト//
-	if (m_resultFlag == true)
-	{
-		m_sprites->Draw(m_resultTexture.Get(), Vector2(0, 0));
-	}
-	if (m_gameTime == 0)
-	{
-		m_sprites->Draw(m_gameOverTexture.Get(), Vector2(0, 0));
+		m_GameTime->Render();
 	}
 
 	//Playerの攻撃表示
-	if (m_player->GetMoveCount() == 1 && m_resultFlag == false)
+	if (m_player->GetMoveCount() == 1 && m_ResultScene->GetFlag() == false)
 	{
-		m_sprites->Draw(m_attackTexture.Get(), Vector2(0, 0));
+		SpriteResources::GetInstance()->m_sprites->Draw(m_attackTexture.Get(), Vector2(0, 0));
 	}
 
+	//タイトル
+	m_TitleScene->Render();
+
+	//リザルト
+	m_ResultScene->Render();
+
 	//スプライトの描画はここまで
-	m_sprites->End();
+	SpriteResources::GetInstance()->m_sprites->End();
 
 	// ここまで
-    m_deviceResources->PIXEndEvent();
+	DX::DeviceResources::GetInstance()->PIXEndEvent();
 
     // Show the new frame.
-    m_deviceResources->Present();
+	DX::DeviceResources::GetInstance()->Present();
 }
 
 // Helper method to clear the back buffers.
 void Game::Clear()
 {
-    m_deviceResources->PIXBeginEvent(L"Clear");
+	DX::DeviceResources::GetInstance()->PIXBeginEvent(L"Clear");
 
     // Clear the views.
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    auto renderTarget = m_deviceResources->GetRenderTargetView();
-    auto depthStencil = m_deviceResources->GetDepthStencilView();
+    auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
+    auto renderTarget = DX::DeviceResources::GetInstance()->GetRenderTargetView();
+    auto depthStencil = DX::DeviceResources::GetInstance()->GetDepthStencilView();
 
     context->ClearRenderTargetView(renderTarget, Colors::SkyBlue);
     context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
     // Set the viewport.
-    auto viewport = m_deviceResources->GetScreenViewport();
+    auto viewport = DX::DeviceResources::GetInstance()->GetScreenViewport();
     context->RSSetViewports(1, &viewport);
 
-    m_deviceResources->PIXEndEvent();
+	DX::DeviceResources::GetInstance()->PIXEndEvent();
 }
 #pragma endregion
 
@@ -420,7 +410,7 @@ void Game::OnResuming()
 
 void Game::OnWindowSizeChanged(int width, int height)
 {
-    if (!m_deviceResources->WindowSizeChanged(width, height))
+    if (!DX::DeviceResources::GetInstance()->WindowSizeChanged(width, height))
         return;
 
     CreateWindowSizeDependentResources();
@@ -441,8 +431,8 @@ void Game::GetDefaultSize(int& width, int& height) const
 // These are the resources that depend on the device.
 void Game::CreateDeviceDependentResources()
 {
-    ID3D11Device* device = m_deviceResources->GetD3DDevice();
-	ID3D11DeviceContext* context =  m_deviceResources->GetD3DDeviceContext();
+    ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
+	ID3D11DeviceContext* context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
     // TODO: Initialize device dependent objects here (independent of window size).
     device;
@@ -451,10 +441,10 @@ void Game::CreateDeviceDependentResources()
 	m_states = std::make_unique<CommonStates>(device);
 
 	// スプライトバッチの作成
-	m_sprites = std::make_unique<SpriteBatch>(context);
+	SpriteResources::GetInstance()->m_sprites = std::make_unique<SpriteBatch>(context);
 
 	// スプライトフォントの作成
-	m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
+	SpriteResources::GetInstance()->m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 
 	// エフェクトファクトリー
 	EffectFactory fx(device);
@@ -475,33 +465,6 @@ void Game::CreateDeviceDependentResources()
 	// テクスチャのロード
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\UI0611.png", nullptr, m_texture.GetAddressOf());
 	
-	//タイトルテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Title.png", nullptr, m_titleTexture.GetAddressOf());
-	
-	//時間のテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Zero.png" , nullptr, m_timeTexture[0].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\One.png"  , nullptr, m_timeTexture[1].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Two.png"  , nullptr, m_timeTexture[2].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Three.png", nullptr, m_timeTexture[3].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Four.png" , nullptr, m_timeTexture[4].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Five.png" , nullptr, m_timeTexture[5].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Six.png  ", nullptr, m_timeTexture[6].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Seven.png", nullptr, m_timeTexture[7].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Eight.png", nullptr, m_timeTexture[8].GetAddressOf());
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Nine.png" , nullptr, m_timeTexture[9].GetAddressOf());
-
-	//タイムUIテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_timeUiTexture.GetAddressOf());
-
-	//リザルトテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Result.png", nullptr, m_resultTexture.GetAddressOf());
-	
-	//ゲームオーバーテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\Over.png", nullptr, m_gameOverTexture.GetAddressOf());
-
-	//アタックテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\ATTACK.png", nullptr, m_attackTexture.GetAddressOf());
-
 	// エフェクトの作成
 	m_batchEffect = std::make_unique<AlphaTestEffect>(device);
 	m_batchEffect->SetAlphaFunction(D3D11_COMPARISON_EQUAL);
@@ -520,18 +483,6 @@ void Game::CreateDeviceDependentResources()
 	//プレイヤーHP
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\HPUI.png", nullptr, m_texture.GetAddressOf());
 	
-	//時間
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_Timetexture.GetAddressOf());
-	
-	//プレイヤーモデル
-	m_playerModel = Model::CreateFromCMO(device, L"Resources\\Models\\redmen.cmo", fx);
-
-	//Monsterモデル
-	m_tsitModel = Model::CreateFromCMO(device, L"Resources\\Models\\Monster1.cmo", fx);
-	
-	//弾モデル
-	m_barrettModel = Model::CreateFromCMO(device, L"Resources\\Models\\shoting.cmo", fx);
-
 	//スフィアの設定
 	Collision::Sphere sphere;
 
@@ -544,34 +495,41 @@ void Game::CreateDeviceDependentResources()
 	//プレイヤー
 	m_player = std::make_unique<tsitPlayer>();
 	m_player->SetGame(this);
-	m_player->SetModel(m_playerModel.get());
 	m_player->SetCollision(sphere);
 
 	//弾
 	m_barrett = std::make_unique<Barrett>();
 	m_barrett->SetGame(this);
-	m_barrett->SetModel(m_barrettModel.get());
 	m_barrett->SetCollision(sphere);
 
 	//ボス敵
-	m_tsit = std::make_unique<CollisionSphere>();
-	m_tsit->SetGame(this);
-	m_tsit->SetModel(m_tsitModel.get());
+	m_Bos = std::make_unique<Monster>();
+	m_Bos->SetGame(this);
 
 	//移動
-	m_tsit->SetPosirion(Vector3(6.0f, 0.0f, 0.0f));
-	m_tsit->SetCollision(sphere);
+	m_Bos->SetPosirion(Vector3(6.0f, 0.0f, 0.0f));
+	m_Bos->SetCollision(sphere);
 
 	//雑魚敵
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i<POP_ENEMY_NUM; i++)
 	{
-		m_tsits[i] = std::make_unique<CollisionSphere>();
-		m_tsits[i]->SetGame(this);
-		m_tsits[i]->SetModel(m_tsitModel.get());
+		Monster* monster = new Monster();
+		m_Enemys.push_back(monster);
+		monster->SetGame(this);
+
 		//移動
-		m_tsits[i]->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
-		m_tsits[i]->SetCollision(sphere);
+		monster->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
+		monster->SetCollision(sphere);
 	}
+
+	//ゲームタイムを作成
+	m_GameTime = std::make_unique<GameTimer>();
+
+	//タイトルシーンを作成
+	m_TitleScene = std::make_unique<TitleScene>();
+
+	//リザルトシーンを作成
+	m_ResultScene = std::make_unique<ResultScene>();
 
 	// TODO: Initialize device dependent objects here (independent of window size).
 	device;
@@ -581,19 +539,6 @@ void Game::CreateDeviceDependentResources()
 void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
-
-	// ウインドウサイズからアスペクト比を算出する
-	RECT size = m_deviceResources->GetOutputSize();
-	float aspectRatio = float(size.right) / float(size.bottom);
-
-	// 画角を設定
-	float fovAngleY = XMConvertToRadians(45.0f);
-
-	// 射影行列を作成する
-	m_projection = Matrix::CreatePerspectiveFieldOfView(fovAngleY, aspectRatio, 0.01f, 1000.0f);
-
-	// デバッグカメラにウインドウのサイズ変更を伝える
-	m_debugCamera->SetWindowSize(size.right, size.bottom);
 }
 
 void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float HP)
@@ -610,7 +555,7 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 	};
 
 	//コンテキスト
-	auto context = m_deviceResources->GetD3DDeviceContext();
+	auto context = DX::DeviceResources::GetInstance()->GetD3DDeviceContext();
 
 	// 不透明に設定
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
@@ -624,8 +569,8 @@ void Game::DrawSprite3D(Matrix & world, Microsoft::WRL::ComPtr<ID3D11ShaderResou
 
 	//// 不透明のみ描画する設定
 	m_batchEffect->SetWorld(world);
-	m_batchEffect->SetView(m_view);
-	m_batchEffect->SetProjection(m_projection);
+	m_batchEffect->SetView(m_debugCamera->GetView());
+	m_batchEffect->SetProjection(m_debugCamera->GetProjection());
 	m_batchEffect->SetTexture(texture.Get());
 	m_batchEffect->Apply(context);
 
@@ -648,15 +593,26 @@ void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
+	for each (auto enemy in m_Enemys)
+	{
+		delete enemy;
+	}
+
 	// コモンステートの解放
 	m_states.reset();
 
 	// スプライトバッチの解放
-	m_sprites.reset();
+	SpriteResources::GetInstance()->m_sprites.reset();
 
 	// スプライトフォントの解放
-	m_font.reset();
+	SpriteResources::GetInstance()->m_font.reset();
 
+	//DeviceResourcesの破棄
+	DX::DeviceResources::Destroy();
+
+	//Keyboard::Destroy();
+
+	//Mouse::Destroy();
 }
 
 void Game::OnDeviceRestored()

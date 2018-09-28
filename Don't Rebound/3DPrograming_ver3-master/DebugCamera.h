@@ -8,6 +8,8 @@
 //--------------------------------------------------------------------------------------
 #pragma once
 
+#include "DeviceResources.h"
+
 // デバッグ用カメラクラス
 class DebugCamera
 {
@@ -25,9 +27,6 @@ class DebugCamera
 
 	float m_sx, m_sy;
 
-	// 生成されたビュー行列
-	DirectX::SimpleMath::Matrix m_view;
-
 	// スクロールフォイール値
 	int m_scrollWheelValue;
 
@@ -39,6 +38,12 @@ class DebugCamera
 	
 	// マウストラッカー
 	DirectX::Mouse::ButtonStateTracker m_tracker;
+
+	// 生成されたビュー行列
+	static DirectX::SimpleMath::Matrix m_view;
+
+	// 射影行列
+	static DirectX::SimpleMath::Matrix m_projection;
 
 private:
 
@@ -85,4 +90,10 @@ public:
 
 	void SetyTmp(float y);
 	
+	//ビュー行列を取得する
+	static const DirectX::SimpleMath::Matrix GetView();
+
+	//射影行列を取得する
+	static const DirectX::SimpleMath::Matrix GetProjection();
 };
+

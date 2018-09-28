@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "CollisionSphere.h"
 #include "Game.h"
+#include "DebugCamera.h"
 
 void CollisionSphere::SetCollision(Collision::Sphere sphere)
 {
 	//コリジョン情報の設定
 	m_collision = sphere;
 
-	m_state = 1;
+	m_enable = true;
 
 	if (m_game)
 	{
@@ -29,18 +30,18 @@ void CollisionSphere::DrawCollision()
 	if (m_game)
 	{
 		//Debug用コリジョンの描画
-		m_obj->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, m_game->GetView(), m_game->GetProjection());
+		m_obj->Draw(m_game->GetContext(), *m_game->GetStates(), m_world, DebugCamera::GetView(), DebugCamera::GetProjection());
 	}
 }
 
 //状態を設定する
-void CollisionSphere::state(int state)
+void CollisionSphere::SetEnable(int enable)
 {
-	m_state = state;
+	m_enable = enable;
 }
 
 //状態を取得する
-int CollisionSphere::GetState()
+int CollisionSphere::GetEnable()
 {
-	return m_state;
+	return m_enable;
 }

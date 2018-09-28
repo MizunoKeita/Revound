@@ -9,7 +9,6 @@ class CollisionSphere :public Obj3D
 private:
 	//ƒRƒŠƒWƒ‡ƒ“î•ñ
 	Collision::Sphere m_collision;
-	int m_state;
 	
 public:
 
@@ -23,10 +22,12 @@ public:
 	void DrawCollision();
 
 	//ó‘Ô‚ğİ’è‚·‚é
-	void state(int state);
+	void SetEnable(int enable);
 
 	//ó‘Ô‚ğæ“¾‚·‚é
-	int GetState();
+	int GetEnable();
 
 	std::unique_ptr<DebugSphere> m_obj;
+
+	bool m_enable;
 };
