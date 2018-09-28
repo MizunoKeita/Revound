@@ -32,16 +32,16 @@ bool tsitPlayer::Update(float elapsedTime)
 	switch (m_moveFlag)
 	{
 	case FORWARD:		//ëOêi
-		v.z = 0.1f;
+		v.z = PLAYER_SPEED;
 		break;	 
 	case BACK:			//å„ëﬁ
-		v.z = -0.1f;
+		v.z = -PLAYER_SPEED;
 		break;	 
 	case RIGHT_TURN:	//âEâÒì]
-		m_direction -= XMConvertToRadians(1.0f);
+		m_direction -= XMConvertToRadians(TURN_AROUND_SPEED);
 		break;
 	case LEFT_TURN:		//ç∂âÒì]
-		m_direction += XMConvertToRadians(1.0f);
+		m_direction += XMConvertToRadians(TURN_AROUND_SPEED);
 		break;
 	case ATTACK:		//çUåÇ
 		v.z = 0.5f;

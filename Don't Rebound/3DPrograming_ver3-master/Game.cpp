@@ -98,22 +98,22 @@ void Game::Update(DX::StepTimer const& timer)
 	
 	if (GetKeyState('A') & 0x8000) {
 		//左に旋回
-		moveX +=0.1f;
+		moveX += m_player->TURN_AROUND_SPEED;
 		m_player->Move(tsitPlayer::LEFT_TURN);
 	}
 	else if (GetKeyState('D') & 0x8000) {
 		//右に旋回
-		moveX -= 0.1f;
+		moveX -= m_player->TURN_AROUND_SPEED;
 		m_player->Move(tsitPlayer::RIGHT_TURN);
 	}
 	else if (GetKeyState('W') & 0x8000) {
 		//前進
-		moveZ += 0.1f;
+		moveZ += m_player->PLAYER_SPEED;
 		m_player->Move(tsitPlayer::FORWARD);
 	}
 	else if (GetKeyState('S') & 0x8000) {
 		//後退
-		moveZ -= 0.1f;
+		moveZ -= m_player->PLAYER_SPEED;
 		m_player->Move(tsitPlayer::BACK);
 	}
 	else if (GetKeyState(' ') & 0x8000) {
@@ -145,14 +145,10 @@ void Game::Update(DX::StepTimer const& timer)
 	//敵の更新
 	m_Bos->Update(elapsedTime);
 
-	//雑魚敵の更新
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	m_Enemy[i]->Update(elapsedTime);
-	//}
-
 	for each (auto enemy in m_Enemys)
 	{
+		enemy->GetPlayerPos(m_player->getPos());
+		enemy->GetPlayerRot(m_player->GetRotation());
 		enemy->Update(elapsedTime);
 	}
 

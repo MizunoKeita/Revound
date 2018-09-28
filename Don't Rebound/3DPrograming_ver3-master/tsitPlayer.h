@@ -56,4 +56,8 @@ public:
 
 	Quaternion GetRotation();
 
+	const float PLAYER_SPEED = 1.0f;
+
+	const float TURN_AROUND_SPEED = 3.0f;
+
 };
