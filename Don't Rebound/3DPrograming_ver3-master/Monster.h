@@ -47,4 +47,5 @@ public:
 	//プレイヤーの座標を取得
 	void GetPlayerRot(Quaternion rot);
 
+	const float MONSTER_SPEED = 0.1f;
 };

@@ -25,24 +25,19 @@ Monster::Monster()
 
 bool Monster::Update(float elapsedTime)
 {
-
+	//プレイヤーと敵の距離を求める
 	m_TrackingPos = m_PlayerPosStorage - m_position;
-
-	//m_TrackingDir = atan2(m_PlayerPosStorage.x *m_position.y - m_PlayerPosStorage.y*m_position.x,
-	//					  m_PlayerPosStorage.x *m_position.x + m_PlayerPosStorage.y*m_position.y);
-	m_TrackingDir = atan2(m_position.y - m_PlayerPosStorage.y, m_position.x - m_PlayerPosStorage.x);
 	
-	//m_TrackingDirLast += XMConvertToRadians(m_TrackingDir);
-	//m_TrackingDir += XMConvertToDegrees(m_TrackingDir);
-
+	//正規化
 	m_TrackingPos.Normalize();
 
+	//スピードをかける
 	m_position += m_TrackingPos*0.1f;
 
-	//ラジアンをデグリーに変換
-	//m_TrackingDirLast = m_TrackingDir*180.0f / m_PI;
+	//atan2で向きを求める
+	m_TrackingDir = atan2(m_PlayerPosStorage.x - m_position.x, m_PlayerPosStorage.z - m_position.z);
 
-	//m_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), m_TrackingDir);
+	//向きを設定する
 	m_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), m_TrackingDir);
 
 	//ワールド行列
