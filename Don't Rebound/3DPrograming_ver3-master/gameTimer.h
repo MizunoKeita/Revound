@@ -24,6 +24,8 @@ public:
 	//時間をリセット
 	void ResetGameTime();
 
+	int GetMaxTime();
+
 private:
 
 	//フレームカウント
@@ -41,4 +43,5 @@ private:
 	//時間のテクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeTexture[10];
 
+	const int MAX_TIME = 60;
 };

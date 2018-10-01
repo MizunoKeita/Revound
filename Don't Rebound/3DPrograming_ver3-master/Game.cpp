@@ -116,7 +116,7 @@ void Game::Update(DX::StepTimer const& timer)
 		moveZ -= m_player->PLAYER_SPEED;
 		m_player->Move(tsitPlayer::BACK);
 	}
-	else if (GetKeyState(' ') & 0x8000) {
+	else if (GetKeyState(' ') & 0x8000 && m_GameTime->GetTimeLimit() != m_GameTime->GetMaxTime()) {
 		m_barrett->setAttack(true);
 	}
 	else {

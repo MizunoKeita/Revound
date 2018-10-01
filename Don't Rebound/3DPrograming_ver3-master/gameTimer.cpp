@@ -12,7 +12,7 @@ GameTimer::GameTimer()
 
 	m_Time = 0;
 
-	m_TimeLimit = 60;
+	m_TimeLimit = MAX_TIME;
 
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
@@ -95,5 +95,10 @@ void GameTimer::ResetGameTime()
 
 	m_Time = 0;
 
-	m_TimeLimit = 60;
+	m_TimeLimit = MAX_TIME;
+}
+
+int GameTimer::GetMaxTime()
+{
+	return MAX_TIME;
 }

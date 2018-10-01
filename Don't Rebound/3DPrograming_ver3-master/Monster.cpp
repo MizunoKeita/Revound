@@ -13,7 +13,7 @@ Monster::Monster()
 
 	m_TrackingDirLast = 0.0f;
 
-	m_Radius = 0.01f;
+	m_Radius = 16.0f;
 
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
