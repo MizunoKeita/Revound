@@ -185,6 +185,7 @@ void Game::Update(DX::StepTimer const& timer)
 		}
 	}
 	
+
 	//リザルトシーンでBが押されたらタイトルに移行
 	if (GetKeyState('B') & 0x8000 && m_ResultScene->GetFlag() == true)
 	{

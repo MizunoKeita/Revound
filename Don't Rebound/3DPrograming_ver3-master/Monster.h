@@ -4,7 +4,6 @@
 class Monster :public CollisionSphere
 {
 public:
-
 	//コンストラクタ
 	Monster();
 
@@ -34,6 +33,12 @@ public:
 
 	//視覚フラグ
 	bool m_WitnessFlag;
+
+	//ランダムで行く方向
+	Vector3 m_RandPos;
+
+	//ランダムで進む時間	
+	int m_RandTime;
 
 	//更新
 	bool Update(float elapsedTime);

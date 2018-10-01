@@ -16,6 +16,7 @@ using namespace DirectX;
 namespace
 {
     std::unique_ptr<Game> g_game;
+	std::unique_ptr<FpsIns> m_FpsInspection;
 };
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -43,6 +44,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         return 1;
 
     g_game = std::make_unique<Game>();
+
+	//FPSÉNÉâÉXÇçÏê¨
+	m_FpsInspection = std::make_unique<FpsIns>();
 
     // Register class and create window
     {
@@ -74,8 +78,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         rc.bottom = static_cast<LONG>(h);
 
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-
-        HWND hwnd = CreateWindowEx(0, L"_3DProgramingWindowClass", L"3DPrograming", WS_OVERLAPPEDWINDOW,
+		
+        HWND hwnd = CreateWindowEx(0, L"_3DProgramingWindowClass", L"Don't Rebound", WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
             nullptr);
         // TODO: Change to CreateWindowEx(WS_EX_TOPMOST, L"_3DProgramingWindowClass", L"3DPrograming", WS_POPUP,

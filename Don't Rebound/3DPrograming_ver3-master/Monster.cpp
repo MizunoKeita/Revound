@@ -27,6 +27,9 @@ Monster::Monster()
 
 bool Monster::Update(float elapsedTime)
 {
+	//ランダムに進む位置を決める
+	m_RandPos = Vector3(rand(), 0.0f, rand());
+
 	//プレイヤーと敵の距離を求める
 	m_TrackingPos = m_PlayerPosStorage - m_position;
 	

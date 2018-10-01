@@ -1,4 +1,5 @@
 #pragma once
+#include "FpsInspection.h"
 
 class GameTimer
 {
@@ -40,8 +41,16 @@ private:
 	//タイムUIのテクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeUiTexture;
 
+	//FPSUIのテクスチャハンドル
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_FpsUiTexture;
+
 	//時間のテクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timeTexture[10];
 
+	//FPSの表示
+	std::unique_ptr<FpsIns> m_FpsInspection;
+
 	const int MAX_TIME = 60;
+
+	const int FONT_SIZE = 50;
 };

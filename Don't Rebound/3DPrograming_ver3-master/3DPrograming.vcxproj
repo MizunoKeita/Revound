@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.h" />
+    <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Monster.h" />
@@ -175,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.cpp" />

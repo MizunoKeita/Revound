@@ -3,6 +3,7 @@
 #include "SpriteResources.h"
 #include "DeviceResources.h"
 
+
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -17,6 +18,9 @@ GameTimer::GameTimer()
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
 
+	//FPSを作成
+	m_FpsInspection= std::make_unique<FpsIns>();
+
 	//時間のテクスチャ
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\Zero.png",  nullptr, m_timeTexture[0].GetAddressOf());
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\One.png",   nullptr, m_timeTexture[1].GetAddressOf());
@@ -30,7 +34,10 @@ GameTimer::GameTimer()
 	CreateWICTextureFromFile(device, L"Resources\\Textures\\Nine.png",  nullptr, m_timeTexture[9].GetAddressOf());
 
 	//タイムUIテクスチャ
-	CreateWICTextureFromFile(device, L"Resources\\Textures\\timeB.png", nullptr, m_timeUiTexture.GetAddressOf());
+	CreateWICTextureFromFile(device, L"Resources\\Textures\\time.png", nullptr, m_timeUiTexture.GetAddressOf());
+
+	//FPSUIテクスチャ
+	CreateWICTextureFromFile(device, L"Resources\\Textures\\fps.png", nullptr, m_FpsUiTexture.GetAddressOf());
 
 }
 
@@ -54,13 +61,18 @@ bool GameTimer::Update()
 		m_TimeLimit = 0;
 	}
 
+	m_FpsInspection->Update();
+
 	return true;
 }
 
 void GameTimer::Render()
 {
-	//ステージ選択画面//
-	SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(0, 0));
+	//時間//
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeUiTexture.Get(), Vector2(FONT_SIZE * 0, 0));
+
+	//fps
+	SpriteResources::GetInstance()->m_sprites->Draw(m_FpsUiTexture.Get(), Vector2(FONT_SIZE * 6, 0));
 
 	//残り時間
 	int hundredTime = m_TimeLimit / 100;
@@ -68,9 +80,19 @@ void GameTimer::Render()
 	int oneTime = (m_TimeLimit - (hundredTime * 100 + tenTime * 10));
 
 	//描画
-	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(300, 0));
-	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(400, 0));
-	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(500, 0));
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(FONT_SIZE*3, 0));
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get()    , Vector2(FONT_SIZE * 4, 0));
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get()    , Vector2(FONT_SIZE * 5, 0));
+
+	//残り時間
+	hundredTime = m_FpsInspection->GetFrame() / 100;
+	tenTime = (m_FpsInspection->GetFrame() - hundredTime * 100) / 10;
+	oneTime = (m_FpsInspection->GetFrame() - (hundredTime * 100 + tenTime * 10));
+
+	//描画
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[hundredTime].Get(), Vector2(FONT_SIZE * 9, 0));
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[tenTime].Get(), Vector2(FONT_SIZE * 10, 0));
+	SpriteResources::GetInstance()->m_sprites->Draw(m_timeTexture[oneTime].Get(), Vector2(FONT_SIZE * 11, 0));
 
 }
 

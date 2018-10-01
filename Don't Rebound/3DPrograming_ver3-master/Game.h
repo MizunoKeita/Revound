@@ -20,7 +20,10 @@
 #include "gameTimer.h"
 #include "TitleScene.h"
 #include "ResultScene.h"
+//#include "FpsInspection.h"
+
 #include <list>
+
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -139,6 +142,9 @@ private:
 	//リザルトシーン
 	std::unique_ptr<ResultScene> m_ResultScene;
 	
+	//FPSの表示
+	//std::unique_ptr<FpsIns> m_FpsInspection;
+
 	/// <summary>
 	/// 定数
 	/// </summary>
