@@ -23,6 +23,7 @@
 //#include "FpsInspection.h"
 
 #include <list>
+#include <time.h>
 
 
 // A basic game implementation that creates a D3D11 device and

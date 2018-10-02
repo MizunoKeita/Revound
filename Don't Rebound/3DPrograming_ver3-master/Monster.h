@@ -61,7 +61,9 @@ public:
 	//プレイヤーの半径を取得
 	void GetPlayerRadius(float radius);
 
-	const float MONSTER_SPEED = 0.1f;
-
+	//距離の判定
 	bool CircleCollision();
+
+	//モンスターのスピード
+	const float MONSTER_SPEED = 0.1f;
 };

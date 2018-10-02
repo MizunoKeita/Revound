@@ -3,6 +3,7 @@
 #include "DebugCamera.h"
 #include "Game.h"
 
+
 Monster::Monster()
 {
 	m_PlayerPosStorage = Vector3(0, 0, 0);
@@ -14,6 +15,8 @@ Monster::Monster()
 	m_TrackingDirLast = 0.0f;
 
 	m_Radius = 16.0f;
+
+	m_RandTime = 0;
 
 	//デバイスの取得
 	ID3D11Device* device = DX::DeviceResources::GetInstance()->GetD3DDevice();
@@ -27,27 +30,53 @@ Monster::Monster()
 
 bool Monster::Update(float elapsedTime)
 {
-	//ランダムに進む位置を決める
-	m_RandPos = Vector3(rand(), 0.0f, rand());
-
-	//プレイヤーと敵の距離を求める
-	m_TrackingPos = m_PlayerPosStorage - m_position;
-	
-	//正規化
-	m_TrackingPos.Normalize();
-
 	if (CircleCollision() == true)
 	{
+		//プレイヤーと敵の距離を求める
+		m_TrackingPos = m_PlayerPosStorage - m_position;
+
+		//正規化
+		m_TrackingPos.Normalize();
+
 		//スピードをかける
 		m_position += m_TrackingPos*0.1f;
+
+		//atan2で向きを求める
+		m_TrackingDir = atan2(m_PlayerPosStorage.x - m_position.x, m_PlayerPosStorage.z - m_position.z);
+
+		//向きを設定する
+		m_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), m_TrackingDir);
 	}
+	else
+	{
+		if (m_RandTime == 0)
+		{
+			//ランダムに進む位置を決める
+			m_RandPos = Vector3(rand() % 50 + 8 - 30, 0.0f, rand() % 50 + 8 - 30);
 
-	//atan2で向きを求める
-	m_TrackingDir = atan2(m_PlayerPosStorage.x - m_position.x, m_PlayerPosStorage.z - m_position.z);
+			//ランダムに進む時間を決める
+			m_RandTime = (rand() % 8 + 1) * 60;
 
-	//向きを設定する
-	m_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), m_TrackingDir);
+			//atan2で向きを求める
+			m_TrackingDir = atan2(m_RandPos.x - m_position.x, m_RandPos.z - m_position.z);
 
+			//向きを設定する
+			m_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), m_TrackingDir);
+		}
+		if (m_RandTime > 0)
+		{
+			m_RandTime--;
+
+			//位置と敵の距離を求める
+			m_TrackingPos = m_RandPos - m_position;
+
+			//正規化
+			m_TrackingPos.Normalize();
+
+			//スピードをかける
+			m_position += m_TrackingPos*0.1f;
+		}
+	}
 	//ワールド行列
 	m_world = Matrix::CreateFromQuaternion(m_rotation)*Matrix::CreateTranslation(m_position);
 

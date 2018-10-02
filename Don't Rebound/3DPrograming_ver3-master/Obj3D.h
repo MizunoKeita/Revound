@@ -44,9 +44,6 @@ public:
 	//ゲームオブジェクトを設定する関数
 	void SetGame(Game* game) { m_game = game; }
 
-	//モデルハンドルを設定する関数
-	//void SetModel(Model* model) { m_model = model; }
-
 	//位置を設定する関数
 	void SetPosirion(Vector3 position) { m_position = position; }
 

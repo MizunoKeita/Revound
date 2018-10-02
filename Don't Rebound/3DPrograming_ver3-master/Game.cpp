@@ -77,6 +77,8 @@ void Game::Update(DX::StepTimer const& timer)
 {
     int elapsedTime = float(timer.GetElapsedSeconds());
 
+	srand((unsigned)time(NULL));
+
 	static float moveX = 0.0f;
 	static float moveZ = 0.0f;
 
@@ -498,6 +500,7 @@ void Game::CreateDeviceDependentResources()
 	m_player = std::make_unique<tsitPlayer>();
 	m_player->SetGame(this);
 	m_player->SetCollision(sphere);
+	m_player->SetPosirion(Vector3(-40.0f, 0.0f, -40.0f));
 
 	//弾
 	m_barrett = std::make_unique<Barrett>();
@@ -507,10 +510,10 @@ void Game::CreateDeviceDependentResources()
 	//ボス敵
 	m_Bos = std::make_unique<Monster>();
 	m_Bos->SetGame(this);
-
-	//移動
-	m_Bos->SetPosirion(Vector3(6.0f, 0.0f, 0.0f));
+	m_Bos->SetPosirion(Vector3(40.0f, 0.0f, 40.0f));
 	m_Bos->SetCollision(sphere);
+
+	srand((unsigned)time(NULL));
 
 	//雑魚敵
 	for (int i = 0; i<POP_ENEMY_NUM; i++)
