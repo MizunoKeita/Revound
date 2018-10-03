@@ -523,7 +523,8 @@ void Game::CreateDeviceDependentResources()
 		monster->SetGame(this);
 
 		//移動
-		monster->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
+		//monster->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
+		monster->SetPosirion(Vector3(40.0f, 0.0f, -40.0f));
 		monster->SetCollision(sphere);
 	}
 
