@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.h" />
+    <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Bos.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.h" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Barrett.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Bos.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\gameTimer.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Main.cpp" />
@@ -207,6 +209,14 @@
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <MeshContentTask Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FBX\bos.FBX">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+    </MeshContentTask>
+    <MeshContentTask Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FBX\redboll.FBX">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Resources\Models\%(Filename).cmo</ContentOutput>
+    </MeshContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

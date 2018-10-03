@@ -170,6 +170,21 @@ void Game::Update(DX::StepTimer const& timer)
 		m_Bos->Dead();
 	}
 
+	//ボスの弾とプレイヤーの当たり判定
+	if (Collision::HitCheck_Sphere2Sphere(m_player->GetCollision(), m_Bos->GetBarrettCollision()) == true)
+	{
+		//PlayerのHPを減らす
+		m_player->SubHp(2.0f);
+	}
+
+	//ボスの弾とプレイヤーの弾の当たり判定
+	if (Collision::HitCheck_Sphere2Sphere(m_barrett->GetCollision(), m_Bos->GetBarrettCollision()) == true)
+	{
+		//弾を消す
+		m_barrett->setAttack(false);
+		m_Bos->StopBarrettAttack();
+	}
+
 	for each (auto enemy in m_Enemys)
 	{
 		if (enemy->m_enable == true)
@@ -334,9 +349,7 @@ void Game::Render()
 	//スプライトの描画
 	DrawSprite3D(world,m_texture,m_player->GetHp());
 
-	//world = Matrix::CreateBillboard(Vector3(0.0f, 0.0f, 0.0f), m_debugCamera->GetEyePosition(), Vector3::Up);
 	//スプライトの描画
-	//DrawSprite3D(world, m_timeUiTexture, 100.0f);
 
 	//タイトル//
 	if (m_TitleScene->GetFlag() != true)
@@ -508,7 +521,7 @@ void Game::CreateDeviceDependentResources()
 	m_barrett->SetCollision(sphere);
 
 	//ボス敵
-	m_Bos = std::make_unique<Monster>();
+	m_Bos = std::make_unique<Bos>(this);
 	m_Bos->SetGame(this);
 	m_Bos->SetPosirion(Vector3(40.0f, 0.0f, 40.0f));
 	m_Bos->SetCollision(sphere);
@@ -523,7 +536,6 @@ void Game::CreateDeviceDependentResources()
 		monster->SetGame(this);
 
 		//移動
-		//monster->SetPosirion(Vector3(rand() % 50 - 25.0f, 0.0f, rand() % 50 - 25.0f));
 		monster->SetPosirion(Vector3(40.0f, 0.0f, -40.0f));
 		monster->SetCollision(sphere);
 	}

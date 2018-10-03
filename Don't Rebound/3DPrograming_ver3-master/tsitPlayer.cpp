@@ -11,7 +11,7 @@ tsitPlayer::tsitPlayer() :m_direction(0.0f), m_moveFlag(STOP)
 {
 	m_moveCount = 0;
 	m_Hp = 100.0f;
-	m_start = Vector3(-5.0f, 0.0f, -5.0f);
+	m_start = Vector3(-40.0f, 0.0f, -40.0f);
 	m_position = m_start;
 	m_Radius = 1.0f;
 

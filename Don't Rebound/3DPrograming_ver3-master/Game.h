@@ -20,6 +20,7 @@
 #include "gameTimer.h"
 #include "TitleScene.h"
 #include "ResultScene.h"
+#include "Bos.h"
 //#include "FpsInspection.h"
 
 #include <list>
@@ -123,7 +124,7 @@ private:
 	std::unique_ptr<Barrett> m_barrett;
 
 	//敵
-	std::unique_ptr<Monster> m_Bos;
+	std::unique_ptr<Bos> m_Bos;
 
 	//敵群
 	std::list<Monster*> m_Enemys;

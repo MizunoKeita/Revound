@@ -8,6 +8,9 @@
       <UniqueIdentifier>33d27b96-0970-45dd-ba5c-04a726dfdc18</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{8beef1b8-2470-42bf-b4ee-80f72f45edb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -34,6 +37,7 @@
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\ResultScene.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Math.h" />
     <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.h" />
+    <ClInclude Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Bos.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -56,6 +60,7 @@
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\TitleScene.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\ResultScene.cpp" />
     <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FpsInspection.cpp" />
+    <ClCompile Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\Bos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -69,5 +74,13 @@
     <Manifest Include="settings.manifest">
       <Filter>Assets</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <MeshContentTask Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FBX\bos.FBX">
+      <Filter>FBX</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="..\..\Don%27t Rebound\3DPrograming_ver3-master\FBX\redboll.FBX">
+      <Filter>FBX</Filter>
+    </MeshContentTask>
   </ItemGroup>
 </Project>
